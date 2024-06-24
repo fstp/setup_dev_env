@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+export VISUAL=nvim
+export EDITOR=${VISUAL}
+
+. "$HOME/.asdf/asdf.sh"
+. "$HOME/.asdf/completions/asdf.bash"
+
+source /usr/share/doc/fzf/examples/key-bindings.bash || true
+export HISTCONTROL=ignoreboth:erasedups
+
+export FZF_DEFAULT_OPTS="--bind \
+ctrl-y:preview-up,ctrl-e:preview-down,\
+ctrl-b:preview-page-up,ctrl-f:preview-page-down,\
+ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down\
+ --preview 'bat --color=always --style=numbers --line-range=:500 {}'"

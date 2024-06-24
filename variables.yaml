@@ -1,0 +1,4 @@
+# vi: ft=yaml.ansible
+---
+username: "root"
+home: "{{ ansible_env.HOME }}"

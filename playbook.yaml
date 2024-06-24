@@ -1,0 +1,233 @@
+# vi: ft=yaml.ansible
+---
+- name: "Set up development environment"
+  hosts: "*"
+  remote_user: "{{ username }}"
+  vars_files:
+    - variables.yaml
+  pre_tasks:
+    - name: "Update apt cache if needed"
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+  tasks:
+    - name: "Upload Ansible bashrc file"
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/.bashrc.ansible"
+        dest: "{{ home }}/.bashrc.ansible"
+
+    - name: "Add Ansible to the regular bashrc file"
+      ansible.builtin.lineinfile:
+        path: "{{ home }}/.bashrc"
+        insertbefore: "BOF"
+        line: source {{ home }}/.bashrc.ansible
+
+    - name: Install Python3
+      become: true
+      ansible.builtin.apt:
+        pkg:
+          - python3
+          - python-is-python3
+          - python3-venv
+
+    - name: Install ASDF dependencies
+      become: true
+      ansible.builtin.apt:
+        pkg:
+          - build-essential
+          - autoconf
+          - m4
+          - libncurses5-dev
+          - libgl1-mesa-dev
+          - libglu1-mesa-dev
+          - libpng-dev
+          - libssh-dev
+          - unixodbc-dev
+
+          - net-tools
+          - git
+          - curl
+
+    - name: "Clone ASDF repo"
+      ansible.builtin.git:
+        repo: https://github.com/asdf-vm/asdf.git
+        dest: "{{ home }}/.asdf"
+        version: master
+        update: false
+
+    - name: "Install latest Erlang using ASDF"
+      ansible.builtin.shell: |
+        asdf plugin add erlang
+        asdf install erlang latest
+        asdf global erlang latest
+      args:
+        executable: /usr/bin/bash
+        creates: "{{ home }}/.asdf/shims/erl"
+
+    - name: "Clone rebar3"
+      ansible.builtin.git:
+        repo: https://github.com/erlang/rebar3
+        dest: "{{ home }}/rebar3"
+        version: main
+        update: false
+
+    - name: "Build rebar3"
+      ansible.builtin.shell: cd {{ home }}/rebar3 && ./bootstrap
+      args:
+        creates: "{{ home }}/rebar3/_build/prod/bin/rebar3"
+
+    - name: "Install rebar3"
+      become: true
+      ansible.builtin.shell: cp -f {{ home }}/rebar3/rebar3 /usr/local/bin
+      args:
+        creates: /usr/local/bin/rebar3
+
+    - name: "Install latest Elixir using ASDF"
+      ansible.builtin.shell: |
+        asdf plugin add elixir
+        asdf install elixir latest
+        asdf global elixir latest
+      args:
+        executable: /usr/bin/bash
+        creates: "{{ home }}/.asdf/shims/iex"
+
+    - name: "Install latest Rust using ASDF"
+      ansible.builtin.shell: |
+        asdf plugin add rust
+        asdf install rust latest
+        asdf global rust latest
+      args:
+        executable: /usr/bin/bash
+        creates: "{{ home }}/.asdf/shims/rustc"
+
+    - name: "Install latest NodeJS using ASDF"
+      ansible.builtin.shell: |
+        asdf plugin add nodejs
+        asdf install nodejs latest
+        asdf global nodejs latest
+      args:
+        executable: /usr/bin/bash
+        creates: "{{ home }}/.asdf/shims/node"
+
+    - name: "Install Neovim dependencies"
+      become: true
+      ansible.builtin.apt:
+        pkg:
+
+          - ninja-build
+          - cmake
+          - gettext
+          - unzip
+          - curl
+          - build-essential
+          # Neovim python plugins
+          - fd-find # venv-select
+          - black
+          - python3-debugpy
+          - flake8
+          - isort
+          - mypy
+          - pylint
+
+    - name: "Softlink fdfind to fd"
+      become: true
+      ansible.builtin.file:
+        src: /usr/bin/fdfind
+        dest: /usr/bin/fd
+        state: link
+        access_time: preserve
+        modification_time: preserve
+
+    - name: "Clone Neovim"
+      ansible.builtin.git:
+        repo: https://github.com/neovim/neovim.git
+        dest: "{{ home }}/nvim"
+        version: master
+        update: false
+
+    - name: "Build Neovim"
+      community.general.make:
+        chdir: "{{ home }}/nvim"
+        params:
+          CMAKE_BUILD_TYPE: RelWithDebInfo
+      changed_when: false
+
+    - name: "Install Neovim"
+      become: true
+      community.general.make:
+        chdir: "{{ home }}/nvim"
+        target: install
+      changed_when: false
+
+    - name: "Clone the automation repo"
+      ansible.builtin.git:
+        repo: https://github.com/fstp/setup_dev_env.git
+        dest: "{{ home }}/setup_dev_env"
+        version: main
+        update: false
+
+    - name: "Create .config directory"
+      ansible.builtin.file:
+        path: "{{ home }}/.config"
+        state: directory
+
+    - name: "Softlink the Neovim configuration into home"
+      ansible.builtin.file:
+        src: "{{ home }}/setup_dev_env/nvim"
+        dest: "{{ home }}/.config/nvim"
+        state: link
+        access_time: preserve
+        modification_time: preserve
+
+    - name: "Create global pip config directory"
+      ansible.builtin.file:
+        path: "{{ home }}/.config/pip"
+        state: directory
+
+    - name: "Create global pip config file"
+      ansible.builtin.file:
+        path: "{{ home }}/.config/pip/pip.conf"
+        state: touch
+        access_time: preserve
+        modification_time: preserve
+
+    - name: "Add some pip configuration to allow installing global packages"
+      ansible.builtin.blockinfile:
+        path: "{{ home }}/.config/pip/pip.conf"
+        block: |
+          [global]
+          break-system-packages = true
+
+    - name: "Install ripgrep, fzf and tmux"
+      become: true
+      ansible.builtin.apt:
+        pkg:
+          - fzf
+          - ripgrep
+          - tmux
+
+    - name: "Install bat for preview"
+      become: true
+      ansible.builtin.apt:
+        pkg: bat
+
+    - name: "Symlink batcat -> bat"
+      ansible.builtin.file:
+        src: /usr/bin/batcat
+        dest: /usr/bin/bat
+        state: link
+        access_time: preserve
+        modification_time: preserve
+
+    - name: "Softlink tmux configuration into home"
+      ansible.builtin.file:
+        src: "{{ home }}/setup_dev_env/.tmux.conf"
+        dest: "{{ home }}/.tmux.conf"
+        state: link
+        access_time: preserve
+        modification_time: preserve
+
+    - name: "Install shellcheck for bash linting"
+      ansible.builtin.apt:
+        pkg: shellcheck
