@@ -44,7 +44,6 @@
           - libpng-dev
           - libssh-dev
           - unixodbc-dev
-
           - net-tools
           - git
           - curl
@@ -114,7 +113,7 @@
       become: true
       ansible.builtin.apt:
         pkg:
-
+          - luarocks
           - ninja-build
           - cmake
           - gettext
@@ -227,6 +226,13 @@
         state: link
         access_time: preserve
         modification_time: preserve
+
+    - name: "Clone tmux plugin manager"
+      ansible.builtin.git:
+        repo: https://github.com/tmux-plugins/tpm
+        dest: "{{ home }}/.tmux/plugins/tpm"
+        version: master
+        update: false
 
     - name: "Install shellcheck for bash linting"
       ansible.builtin.apt:
