@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+# vi:set ft=sh
 
 # append to the history file, don't overwrite it
 shopt -s histappend
@@ -17,3 +18,16 @@ ctrl-y:preview-up,ctrl-e:preview-down,\
 ctrl-b:preview-page-up,ctrl-f:preview-page-down,\
 ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down\
  --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+
+# 1. Search for text in files using Ripgrep
+# 2. Interactively narrow down the list using fzf
+# 3. Open the file in Vim
+rfv() {
+  rg --color=always --line-number --no-heading --smart-case "${*:-}" |
+    fzf --ansi \
+    --color "hl:-1:underline,hl+:-1:underline:reverse" \
+    --delimiter : \
+    --preview 'bat --color=always {1} --highlight-line {2}' \
+    --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
+    --bind 'enter:execute(nvim {1} +{2})'
+}
