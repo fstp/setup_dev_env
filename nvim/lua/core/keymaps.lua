@@ -22,11 +22,11 @@ keymap.set("n", "<leader>tn", ":tabn<CR>") -- next tab
 keymap.set("n", "<leader>tp", ":tabp<CR>") -- previous tab
 
 -- Diff keymaps
-keymap.set("n", "<leader>cc", ":diffput<CR>") -- put diff from current to other during diff
-keymap.set("n", "<leader>cj", ":diffget 1<CR>") -- get diff from left (local) during merge
-keymap.set("n", "<leader>ck", ":diffget 3<CR>") -- get diff from right (remote) during merge
-keymap.set("n", "<leader>cn", "]c") -- next diff hunk
-keymap.set("n", "<leader>cp", "[c") -- previous diff hunk
+-- keymap.set("n", "<leader>cc", ":diffput<CR>") -- put diff from current to other during diff
+-- keymap.set("n", "<leader>cj", ":diffget 1<CR>") -- get diff from left (local) during merge
+-- keymap.set("n", "<leader>ck", ":diffget 3<CR>") -- get diff from right (remote) during merge
+-- keymap.set("n", "<leader>cn", "]c") -- next diff hunk
+-- keymap.set("n", "<leader>cp", "[c") -- previous diff hunk
 
 -- Quickfix keymaps
 keymap.set("n", "<leader>qo", ":copen<CR>") -- open quickfix list
