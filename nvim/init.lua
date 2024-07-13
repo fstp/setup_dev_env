@@ -32,6 +32,9 @@ vim.api.nvim_set_hl(0, 'LspReferenceRead', {fg = "#81B69D"})
 vim.api.nvim_set_hl(0, 'LspReferenceWrite', {fg = "#81B69D"})
 vim.api.nvim_set_hl(0, 'LspReferenceText', {fg = "#81B69D"})
 
+-- Color the split separator with bright orange to make it more visible
+vim.api.nvim_set_hl(0, 'WinSeparator', {fg = "#E19400"})
+
 vim.cmd([[
 augroup highlight_yank
   autocmd! TextYankPost
