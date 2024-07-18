@@ -41,6 +41,8 @@ return {
   config = function (_, opts)
     local telescope = require("telescope")
     local actions = require("telescope.actions")
+    local lga_actions = require("telescope-live-grep-args.actions")
+
     opts.defaults.mappings = {
       n = {
         ["<C-s>"] = actions.cycle_previewers_next,
@@ -50,10 +52,19 @@ return {
       i = {
         ["<esc>"] = actions.close,
         ["<C-q>"] = "smart_send_to_qflist",
+        ["<C-space>"] = actions.to_fuzzy_refine,
       }
     }
     opts.extensions = {
-      -- Add extension configuration here
+      live_grep_args = {
+        auto_quoting = false,
+        mappings = {
+          i = {
+            ["<C-k>"] = lga_actions.quote_prompt(),
+            ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+          }
+        }
+      }
     }
     telescope.setup(opts)
   end

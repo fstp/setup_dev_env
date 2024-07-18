@@ -49,7 +49,7 @@ keymap.set('n', '<leader>fp', ":Telescope projects<CR>")
 keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, {})
 keymap.set('n', '<leader>fl', require('telescope.builtin').oldfiles, {})
 
---keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, {})
+-- keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, {})
 keymap.set('n', '<leader>fg', require('telescope').extensions.live_grep_args.live_grep_args, {})
 
 keymap.set('n', '<leader>fb', require('telescope.builtin').buffers, {})
