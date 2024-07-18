@@ -74,11 +74,11 @@ return {
         end, { 'i', 's' }),
       },
       sources = cmp.config.sources({
-        { name = "copilot", max_item_count = 7 }, -- copilot
-        { name = "nvim_lsp", max_item_count = 7 }, -- lsp
-        { name = "luasnip", max_item_count = 7 }, -- snippets
-        { name = "buffer", max_item_count = 7 }, -- text within current buffer
-        { name = "path", max_item_count = 7 }, -- file system paths
+        { name = "copilot", max_item_count = 4 }, -- copilot
+        { name = "nvim_lsp", max_item_count = 4 }, -- lsp
+        { name = "luasnip", max_item_count = 4 }, -- snippets
+        { name = "buffer", max_item_count = 3 }, -- text within current buffer
+        { name = "path", max_item_count = 4 }, -- file system paths
       }),
       window = {
         -- Add borders to completions popups
