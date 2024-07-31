@@ -92,16 +92,16 @@ local open_floating = function()
     {relative="win", row=50, col=100, width=floating_width, height=floating_height, border="rounded", anchor="SW"})
 end
 
-local change_width_floating = function(delta)
-  if (floating_width <= 10) then
-    return
-  end
-  local width = floating_width + delta
-  if vim.api.nvim_win_is_valid(floating_win) then
-    vim.api.nvim_win_set_width(floating_win, width)
-    floating_width = width
-  end
-end
+-- local change_width_floating = function(delta)
+--   if (floating_width <= 10) then
+--     return
+--   end
+--   local width = floating_width + delta
+--   if vim.api.nvim_win_is_valid(floating_win) then
+--     vim.api.nvim_win_set_width(floating_win, width)
+--     floating_width = width
+--   end
+-- end
 
 local current_buffer = function(_)
   vim.print(vim.fn.expand("%:p"))
@@ -187,6 +187,8 @@ keymap.set('i', '<C-Space>', '<cmd>lua vim.lsp.buf.completion()<CR>')
 
 -- Add all diagnostics from the current buffer to quickfix list
 keymap.set('n', '<leader>gq', '<cmd>lua vim.fn.setqflist(vim.diagnostic.toqflist(vim.diagnostic.get(0)))<CR>')
+keymap.set('n', '<M-j>', '<cmd>cnext<CR>zz')
+keymap.set('n', '<M-k>', '<cmd>cprev<CR>zz')
 
 -- Filetype-specific keymaps (these can be done in the ftplugin directory instead if you prefer)
 keymap.set("n", '<leader>go', function()

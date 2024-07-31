@@ -47,11 +47,11 @@ return {
       n = {
         ["<C-s>"] = actions.cycle_previewers_next,
         ["<C-a>"] = actions.cycle_previewers_prev,
-        ["<C-q>"] = "smart_send_to_qflist",
+        ["<M-q>"] = "smart_send_to_qflist",
+        ["<M-a>"] = "smart_add_to_qflist",
       },
       i = {
         ["<esc>"] = actions.close,
-        ["<C-q>"] = "smart_send_to_qflist",
         ["<C-space>"] = actions.to_fuzzy_refine,
       }
     }
