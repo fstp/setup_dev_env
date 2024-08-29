@@ -23,7 +23,7 @@ ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down\
 # 2. Interactively narrow down the list using fzf
 # 3. Open the file in Vim
 rfv() {
-  rg --color=always --line-number --no-heading --smart-case "${*:-}" |
+  rg --color=always --line-number --no-heading --smart-case "${@:-}" |
     fzf --ansi \
     --color "hl:-1:underline,hl+:-1:underline:reverse" \
     --delimiter : \
