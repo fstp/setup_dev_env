@@ -48,6 +48,7 @@ return {
         'rust_analyzer',
         'tsserver',
         'biome',
+        'gopls',
       }
     })
 
