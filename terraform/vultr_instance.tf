@@ -27,7 +27,8 @@ resource "vultr_instance" "server" {
   hostname = "server-${count.index + 1}"
   plan = "vc2-1c-1gb"
   region = "sto"
-  os_id = "2284"
+  os_id = "2284" # Ubuntu
+  #image_id = "ubuntu-xfce" # Ubuntu Desktop (XFCE)
   enable_ipv6 = true
   ssh_key_ids = [data.vultr_ssh_key.my_ssh_key.id]
   vpc2_ids = [vultr_vpc2.vpc[0].id]
