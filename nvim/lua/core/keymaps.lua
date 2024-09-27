@@ -84,24 +84,10 @@ local focus_floating = function(_)
 end
 
 local open_floating = function()
-  -- close_floating({})
-  -- floating_win = vim.api.nvim_open_win(0, true,
-  --   {relative="cursor", row=10, col=80, width=floating_width, height=floating_height, border="rounded", anchor="SW"})
   close_floating({})
   floating_win = vim.api.nvim_open_win(0, true,
     {relative="win", row=50, col=100, width=floating_width, height=floating_height, border="rounded", anchor="SW"})
 end
-
--- local change_width_floating = function(delta)
---   if (floating_width <= 10) then
---     return
---   end
---   local width = floating_width + delta
---   if vim.api.nvim_win_is_valid(floating_win) then
---     vim.api.nvim_win_set_width(floating_win, width)
---     floating_width = width
---   end
--- end
 
 local current_buffer = function(_)
   vim.print(vim.fn.expand("%:p"))
@@ -114,25 +100,17 @@ end
 
 local wrapper = function(opts)
   local lookup = {
-    ["t"] = "tabnew",
-    ["s"] = "below",
-    ["v"] = "right",
+    ["t"] = "tab",
+    ["s"] = "split",
+    ["v"] = "vsplit",
   }
   local user_input = vim.fn.input("[tab, split, vsplit]: ")
-  vim.print(user_input)
   if opts == nil then
-    opts = {reuse_win = true}
+    opts = {reuse_win = false}
   end
   if user_input ~= "" then
     local split = lookup[user_input]
-    if split == "tabnew" then
-      vim.cmd("tab split")
-    elseif split ~= nil then
-      vim.api.nvim_open_win(0, true, {split = split})
-    else
-      vim.print("Invalid split type: " .. user_input)
-      return
-    end
+    opts.jump_type = split
   end
   return require('telescope.builtin').lsp_definitions(opts)
 end
@@ -142,7 +120,6 @@ keymap.set('n', '<leader>wc', close_floating, {})
 keymap.set('n', '<leader>wf', focus_floating, {})
 keymap.set('n', '<leader>wo', wrapper_floating, {})
 keymap.set('n', '<leader>wp', current_buffer, {})
--- keymap.set('n', '<leader>wj', function() change_width_floating(-10) end, {})
 
 -- Remote management
 keymap.set('n', '<leader>rp', '<cmd>silent !~/script/rsync_push<CR>')
