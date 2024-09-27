@@ -5,7 +5,7 @@ return {
   event = 'VeryLazy',
   main = "ibl",
   opts = {
-    enabled = true,
+    enabled = false,
     indent = {
       char = '|',
     },
