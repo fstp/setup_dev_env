@@ -237,3 +237,12 @@
     - name: "Install shellcheck for bash linting"
       ansible.builtin.apt:
         pkg: shellcheck
+
+    - name: "Install latest Lua using ASDF"
+      ansible.builtin.shell: |
+        asdf plugin-add lua https://github.com/Stratus3D/asdf-lua.git
+        asdf install lua latest
+        asdf global lua latest
+      args:
+        executable: /usr/bin/bash
+        creates: "{{ home }}/.asdf/shims/lua"
