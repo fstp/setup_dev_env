@@ -142,6 +142,12 @@ end
 keymap.set('i', '<C-right>', accept_word, {})
 keymap.set('i', '<C-up>', accept_line, {})
 keymap.set('i', '<C-down>', clear_suggestion, {})
+keymap.set('v', '<leader>cc', '<cmd>CopilotChatToggle<CR>')
+keymap.set('v', '<leader>ce', '<cmd>CopilotChatExplain<CR>')
+keymap.set('v', '<leader>cd', '<cmd>CopilotChatDocs<CR>')
+keymap.set('v', '<leader>cf', '<cmd>CopilotChatFix<CR>')
+keymap.set('n', '<leader>cc', '<cmd>CopilotChatToggle<CR>')
+
 
 -- LSP
 keymap.set('n', '<leader>gg', '<cmd>lua vim.lsp.buf.hover()<CR>')
