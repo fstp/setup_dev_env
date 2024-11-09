@@ -18,6 +18,11 @@ return {
       'lua',
       'hcl',
       'terraform',
+      'markdown',
+      'markdown_inline',
+      'luadoc',
+      'c',
+      'query'
     },
   },
   config = function (_, opts)

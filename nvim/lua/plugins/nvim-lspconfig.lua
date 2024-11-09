@@ -46,7 +46,7 @@ return {
         --'elixirls',
         "ansiblels",
         'rust_analyzer',
-        'tsserver',
+        -- 'tsserver',
         'biome',
         'gopls',
       }
