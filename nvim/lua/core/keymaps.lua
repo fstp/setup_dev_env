@@ -67,7 +67,7 @@ keymap.set('n', '<leader>fr', require('telescope.builtin').resume, {})
 keymap.set('n', '<leader>fn', require('telescope').extensions.neoclip.default, {})
 
 local floating_win = -1
-local floating_height = 40
+local floating_height = 50
 local floating_width = 100
 
 local close_floating = function(_)
