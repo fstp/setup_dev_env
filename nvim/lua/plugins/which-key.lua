@@ -7,11 +7,14 @@ return {
     vim.o.timeoutlen = 300
   end,
   opts = {
-    triggers_blacklist = {
-      -- list of mode / prefixes that should never be hooked by WhichKey
-      -- this is mostly relevant for keymaps that start with a native binding
-      i = { "i", "j", "k" },
-      v = { "j", "k" },
+    triggers = {
+      { "<leader>", mode = { "n", "v" } },
     },
+    -- triggers_blacklist = {
+    --   -- list of mode / prefixes that should never be hooked by WhichKey
+    --   -- this is mostly relevant for keymaps that start with a native binding
+    --   i = { "i", "j", "k" },
+    --   v = { "j", "k" },
+    -- },
   }
 }
