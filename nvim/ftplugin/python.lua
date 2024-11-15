@@ -39,29 +39,29 @@ local function send_buffer()
   send_to_tmux(table.concat(lines, "\n"), pane)
 end
 
-vim.keymap.set("v", "<M-j>", function() send_selection() end)
-vim.keymap.set("n", "<M-l>", function() send_line() end)
+-- vim.keymap.set("v", "<M-j>", function() send_selection() end)
+-- vim.keymap.set("n", "<M-l>", function() send_line() end)
 vim.keymap.set("n", "<M-b>", function() send_buffer() end)
 
-local function find_function_clause(node)
-  if node == nil then return nil
-  elseif node:type() == "module" then return nil
-  elseif node:type() == "function_definition" then return node
-  else return find_function_clause(node:parent()) end
-end
+-- local function find_function_clause(node)
+--   if node == nil then return nil
+--   elseif node:type() == "module" then return nil
+--   elseif node:type() == "function_definition" then return node
+--   else return find_function_clause(node:parent()) end
+-- end
 
-vim.keymap.set("n", "<M-k>", function ()
-  local ts = require("vim.treesitter")
-  local ts_utils = require("nvim-treesitter.ts_utils")
-  local curr_node = ts_utils.get_node_at_cursor()
-  local function_node = find_function_clause(curr_node)
+-- vim.keymap.set("n", "<M-k>", function ()
+--   local ts = require("vim.treesitter")
+--   local ts_utils = require("nvim-treesitter.ts_utils")
+--   local curr_node = ts_utils.get_node_at_cursor()
+--   local function_node = find_function_clause(curr_node)
 
-  if function_node == nil then
-    print("No surrounding function")
-    return
-  end
+--   if function_node == nil then
+--     print("No surrounding function")
+--     return
+--   end
 
-  local pane = 0
-  local text = ts.get_node_text(function_node, 0)
-  send_to_tmux(text, pane)
-end)
+--   local pane = 0
+--   local text = ts.get_node_text(function_node, 0)
+--   send_to_tmux(text, pane)
+-- end)
