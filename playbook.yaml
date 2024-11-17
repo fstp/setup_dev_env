@@ -23,18 +23,11 @@
         insertbefore: "BOF"
         line: source {{ home }}/.bashrc.ansible
 
-    - name: Install Python3
-      become: true
-      ansible.builtin.apt:
-        pkg:
-          - python3
-          - python-is-python3
-          - python3-venv
-
     - name: Install ASDF dependencies
       become: true
       ansible.builtin.apt:
         pkg:
+          - unzip
           - build-essential
           - autoconf
           - m4
@@ -57,6 +50,7 @@
 
     - name: "Install latest Erlang using ASDF"
       ansible.builtin.shell: |
+        . ~/.bashrc
         asdf plugin add erlang
         asdf install erlang latest
         asdf global erlang latest
@@ -72,18 +66,19 @@
         update: false
 
     - name: "Build rebar3"
-      ansible.builtin.shell: cd {{ home }}/rebar3 && ./bootstrap
+      ansible.builtin.shell: . ~/bashrc && cd {{ home }}/rebar3 && ./bootstrap
       args:
         creates: "{{ home }}/rebar3/_build/prod/bin/rebar3"
 
     - name: "Install rebar3"
       become: true
-      ansible.builtin.shell: cp -f {{ home }}/rebar3/rebar3 /usr/local/bin
+      ansible.builtin.shell: . ~/bashrc && cp -f {{ home }}/rebar3/rebar3 /usr/local/bin
       args:
         creates: /usr/local/bin/rebar3
 
     - name: "Install latest Elixir using ASDF"
       ansible.builtin.shell: |
+        . ~/.bashrc
         asdf plugin add elixir
         asdf install elixir latest
         asdf global elixir latest
@@ -93,6 +88,7 @@
 
     - name: "Install latest Rust using ASDF"
       ansible.builtin.shell: |
+        . ~/.bashrc
         asdf plugin add rust
         asdf install rust latest
         asdf global rust latest
@@ -102,6 +98,7 @@
 
     - name: "Install latest NodeJS using ASDF"
       ansible.builtin.shell: |
+        . ~/.bashrc
         asdf plugin add nodejs
         asdf install nodejs latest
         asdf global nodejs latest
@@ -212,6 +209,7 @@
         pkg: bat
 
     - name: "Symlink batcat -> bat"
+      become: true
       ansible.builtin.file:
         src: /usr/bin/batcat
         dest: /usr/bin/bat
@@ -235,11 +233,13 @@
         update: false
 
     - name: "Install shellcheck for bash linting"
+      become: true
       ansible.builtin.apt:
         pkg: shellcheck
 
     - name: "Install latest Lua using ASDF"
       ansible.builtin.shell: |
+        . ~/.bashrc
         asdf plugin-add lua https://github.com/Stratus3D/asdf-lua.git
         asdf install lua latest
         asdf global lua latest
