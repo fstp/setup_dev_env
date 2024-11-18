@@ -26,6 +26,8 @@ config.wsl_domains = {
 config.default_domain = 'WSL:Ubuntu'
 config.font = wezterm.font 'Terminess Nerd Font'
 
+config.max_fps = 120
+
 -- For example, changing the color scheme:
 config.color_scheme = 'AdventureTime'
 
