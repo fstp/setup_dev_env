@@ -3,6 +3,6 @@ return {
   lazy = false,
   config = function ()
     require('leap').create_default_mappings()
-    require('leap').opts.safe_labels = {}
+    -- require('leap').opts.safe_labels = {}
   end
 }

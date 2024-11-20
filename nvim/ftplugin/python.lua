@@ -39,7 +39,7 @@ local function send_buffer()
   send_to_tmux(table.concat(lines, "\n"), pane)
 end
 
--- vim.keymap.set("v", "<M-j>", function() send_selection() end)
+vim.keymap.set("v", "<M-ö>", function() send_selection() end)
 -- vim.keymap.set("n", "<M-l>", function() send_line() end)
 vim.keymap.set("n", "<M-b>", function() send_buffer() end)
 
