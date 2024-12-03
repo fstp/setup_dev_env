@@ -65,6 +65,7 @@ keymap.set('n', '<leader>fj', require('telescope.builtin').jumplist, {})
 keymap.set('n', '<leader>fw', function() require('telescope.builtin').current_buffer_fuzzy_find{default_text = vim.fn.expand("<cword>")} end)
 keymap.set('n', '<leader>fr', require('telescope.builtin').resume, {})
 keymap.set('n', '<leader>fn', require('telescope').extensions.neoclip.default, {})
+keymap.set('n', '<leader>ft', require('telescope-tabs').list_tabs, {})
 
 local floating_win = -1
 local floating_height = 50
