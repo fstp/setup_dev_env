@@ -69,7 +69,7 @@ keymap.set('n', '<leader>ft', require('telescope-tabs').list_tabs, {})
 
 local floating_win = -1
 local floating_height = 50
-local floating_width = 100
+local floating_width = 120
 
 local close_floating = function(_)
   if vim.api.nvim_win_is_valid(floating_win) then
@@ -191,6 +191,20 @@ keymap.set("n", '<leader>tm', function()
   if vim.bo.filetype == 'python' then
     require('dap-python').test_method();
   end
+end)
+
+-- Quickfix stuff
+--
+keymap.set("n", "<leader>qa", function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local lnum = vim.fn.line(".")
+    local col = vim.fn.col(".")
+    local text = vim.api.nvim_get_current_line()
+    vim.fn.setqflist({{bufnr = bufnr, lnum = lnum, col = col, text = text}}, "a")
+end)
+
+keymap.set("n", "<leader>qs", function()
+    vim.fn.setqflist({})
 end)
 
 -- Debugging
