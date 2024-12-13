@@ -171,8 +171,8 @@ keymap.set('i', '<C-Space>', '<cmd>lua vim.lsp.buf.completion()<CR>')
 
 -- Add all diagnostics from the current buffer to quickfix list
 keymap.set('n', '<leader>gq', '<cmd>lua vim.fn.setqflist(vim.diagnostic.toqflist(vim.diagnostic.get(0)))<CR>')
-keymap.set('n', '<M-j>', '<cmd>cnext<CR>zz')
-keymap.set('n', '<M-k>', '<cmd>cprev<CR>zz')
+-- keymap.set('n', '<M-j>', '<cmd>cnext<CR>zz')
+-- keymap.set('n', '<M-k>', '<cmd>cprev<CR>zz')
 
 -- Filetype-specific keymaps (these can be done in the ftplugin directory instead if you prefer)
 keymap.set("n", '<leader>go', function()
