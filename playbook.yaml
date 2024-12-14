@@ -106,6 +106,15 @@
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/node"
 
+    - name: "Install latest Go using ASDF"
+      ansible.builtin.shell: |
+        asdf plugin add golang
+        asdf install golang latest
+        asdf global golang latest
+      args:
+        executable: /usr/bin/bash
+        creates: "{{ home }}/.asdf/shims/go"
+
     - name: "Install Neovim dependencies"
       become: true
       ansible.builtin.apt:
