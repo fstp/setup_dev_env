@@ -96,6 +96,17 @@
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/rustc"
 
+    - name: "Install Television for easy searching"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        cargo install --locked television
+        mkdir -p ~/.config/television
+
+    - name: "Install custom Television channels"
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/custom-channels.toml"
+        dest: "{{ home }}/.config/television/custom-channels.toml"
+
     - name: "Install latest NodeJS using ASDF"
       ansible.builtin.shell: |
         . ~/.bashrc
