@@ -2,3 +2,8 @@
 name = "gitlog"
 source_command = 'git log --oneline --date=short --pretty="format:%h %s %an %cd" "$@"'
 preview_command = 'git show -p --stat --pretty=fuller --color=always {0}'
+
+[[cable_channel]]
+name = "gitstash"
+source_command = 'git stash list'
+preview_command = "echo {0} | sed 's/:.*//' | xargs git stash show -p --stat --pretty=fuller --color=always"
