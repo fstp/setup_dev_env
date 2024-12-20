@@ -1,6 +1,6 @@
 [[cable_channel]]
 name = "gitlog"
-source_command = 'git log --oneline --date=short --pretty="format:%h %s %an %cd" "$@"'
+source_command = 'git log --oneline --date=short --pretty="format:%h [%cd] {%an} %s" "$@"'
 preview_command = 'git show -p --stat --pretty=fuller --color=always {0}'
 
 [[cable_channel]]

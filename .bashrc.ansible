@@ -31,3 +31,5 @@ rfv() {
     --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
     --bind 'enter:execute(nvim {1} +{2})'
 }
+
+eval "$(zoxide init bash)"
