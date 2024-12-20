@@ -43,6 +43,8 @@ return {
     local actions = require("telescope.actions")
     local lga_actions = require("telescope-live-grep-args.actions")
 
+    telescope.load_extension('fzf')
+
     opts.defaults.mappings = {
       n = {
         ["<C-s>"] = actions.cycle_previewers_next,
