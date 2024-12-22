@@ -22,7 +22,10 @@ return {
       'markdown_inline',
       'luadoc',
       'c',
-      'query'
+      'query',
+      'html',
+      'css',
+      'tsx',
     },
   },
   config = function (_, opts)

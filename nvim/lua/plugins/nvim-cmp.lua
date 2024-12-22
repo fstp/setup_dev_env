@@ -23,14 +23,25 @@ return {
     'hrsh7th/cmp-path',
     -- https://github.com/hrsh7th/cmp-cmdline
     'hrsh7th/cmp-cmdline',
+
+    -- Tailwind CSS tools
+    { 'luckasRanarison/tailwind-tools.nvim' },
+    { 'onsails/lspkind-nvim' }, -- Highlighting colors
   },
   config = function()
     local cmp = require('cmp')
     local luasnip = require('luasnip')
+    local lspkind = require('lspkind')
+
     require('luasnip.loaders.from_vscode').lazy_load()
     luasnip.config.setup({})
 
     cmp.setup({
+      formatting = {
+        format = require("lspkind").cmp_format({
+          before = require("tailwind-tools.cmp").lspkind_format
+        }),
+      },
       snippet = {
         expand = function(args)
           luasnip.lsp_expand(args.body)
@@ -42,15 +53,15 @@ return {
       mapping = cmp.mapping.preset.insert {
         ['<C-j>'] = cmp.mapping.select_next_item(), -- next suggestion
         ['<C-k>'] = cmp.mapping.select_prev_item(), -- previous suggestion
-        ['<C-b>'] = cmp.mapping.scroll_docs(-4), -- scroll backward
-        ['<C-f>'] = cmp.mapping.scroll_docs(4), -- scroll forward
-        ['<C-u>'] = cmp.mapping.abort(), -- abort selection
-        ['<C-Space>'] = cmp.mapping.complete {}, -- show completion suggestions
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),    -- scroll backward
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),     -- scroll forward
+        ['<C-u>'] = cmp.mapping.abort(),            -- abort selection
+        ['<C-Space>'] = cmp.mapping.complete {},    -- show completion suggestions
         ['<C-l>'] = cmp.mapping.confirm {
           behavior = cmp.ConfirmBehavior.Replace,
           select = true,
         },
-	-- Tab through suggestions or when a snippet is active, tab to the next argument
+        -- Tab through suggestions or when a snippet is active, tab to the next argument
         ['<Tab>'] = cmp.mapping(function(fallback)
           -- if cmp.visible() then
           --   cmp.select_next_item()
@@ -61,7 +72,7 @@ return {
             fallback()
           end
         end, { 'i', 's' }),
-	-- Tab backwards through suggestions or when a snippet is active, tab to the next argument
+        -- Tab backwards through suggestions or when a snippet is active, tab to the next argument
         ['<S-Tab>'] = cmp.mapping(function(fallback)
           -- if cmp.visible() then
           --   cmp.select_prev_item()
@@ -84,11 +95,11 @@ return {
         -- { name = "luasnip" }, -- snippets
         -- { name = "buffer" }, -- text within current buffer
         -- { name = "path" }, -- file system paths
-        { name = "copilot", max_item_count = 10 }, -- copilot
+        { name = "copilot",  max_item_count = 10 }, -- copilot
         { name = "nvim_lsp", max_item_count = 10 }, -- lsp
-        { name = "luasnip", max_item_count = 4 }, -- snippets
-        { name = "buffer", max_item_count = 4 }, -- text within current buffer
-        { name = "path", max_item_count = 4 }, -- file system paths
+        { name = "luasnip",  max_item_count = 4 },  -- snippets
+        { name = "buffer",   max_item_count = 4 },  -- text within current buffer
+        { name = "path",     max_item_count = 4 },  -- file system paths
       }),
       window = {
         -- Add borders to completions popups
@@ -97,5 +108,4 @@ return {
       },
     })
   end,
- }
-
+}

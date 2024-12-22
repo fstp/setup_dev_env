@@ -17,16 +17,21 @@ return {
 
     -- Useful status updates for LSP
     -- https://github.com/j-hui/fidget.nvim
-    { 'j-hui/fidget.nvim', opts = {} },
+    { 'j-hui/fidget.nvim',                        opts = {} },
 
     -- Additional lua configuration, makes nvim stuff amazing!
     -- https://github.com/folke/neodev.nvim
-    {'folke/neodev.nvim' },
+    { 'folke/neodev.nvim' },
   },
   opts = {
     autoformat = false,
+    -- formatting = {
+    --   format = require("lspkind").cmp_format({
+    --     before = require("tailwind-tools.cmp").lspkind_format
+    --   }),
+    -- },
   },
-  config = function ()
+  config = function()
     require('mason').setup()
     require('mason-lspconfig').setup({
       -- Install these LSPs automatically
@@ -44,11 +49,12 @@ return {
         --'erlangls',
         --'angularls',
         --'elixirls',
-        "ansiblels",
+        'ansiblels',
         'rust_analyzer',
         -- 'tsserver',
         'biome',
         'gopls',
+        'tailwindcss',
       }
     })
 
@@ -83,8 +89,8 @@ return {
           capabilities = lsp_capabilities,
           handlers = {
             -- Add borders to LSP popups
-            ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
-            ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = 'rounded' }),
+            ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' }),
+            ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' }),
           }
         })
       end
@@ -98,7 +104,7 @@ return {
     lspconfig.lua_ls.setup {
       on_init = function(client)
         local path = client.workspace_folders[1].name
-        if vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc') then
+        if vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc') then
           return
         end
 
@@ -125,10 +131,19 @@ return {
         Lua = {
           diagnostics = {
             -- Get the language server to recognize the `vim` global
-            globals = {'vim'},
+            globals = { 'vim' },
           },
         },
       },
+    }
+
+    lspconfig.tailwindcss.setup {
+      -- classAttributes = { "class", "className", "class:list", "classList", "ngClass" },
+      -- includeLanguages = {
+      --   eelixir = "html-eex",
+      --   heex = "html",
+      --   elixir = "html",
+      -- }
     }
 
     -- Globally configure all LSP floating preview popups (like hover, signature help, etc)
@@ -138,7 +153,5 @@ return {
       opts.border = opts.border or "rounded" -- Set border to rounded
       return open_floating_preview(contents, syntax, opts, ...)
     end
-
   end
 }
-
