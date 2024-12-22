@@ -34,3 +34,9 @@ rfv() {
 
 export PATH=$PATH:~/.cargo/bin
 eval "$(zoxide init bash)"
+
+# Git aliases
+alias gds='git diff --staged'
+alias gd='git diff'
+alias gs='git status'
+alias gaup='git add -u'
