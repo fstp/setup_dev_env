@@ -39,4 +39,4 @@ eval "$(zoxide init bash)"
 alias gds='git diff --staged'
 alias gd='git diff'
 alias gs='git status'
-alias gaup='git add -u'
+alias gau='git add -u'
