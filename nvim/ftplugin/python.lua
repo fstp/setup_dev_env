@@ -41,7 +41,7 @@ end
 
 vim.keymap.set("v", "<M-ö>", function() send_selection() end)
 -- vim.keymap.set("n", "<M-l>", function() send_line() end)
-vim.keymap.set("n", "<M-b>", function() send_buffer() end)
+vim.keymap.set("n", "<M-ä>", function() send_buffer() end)
 
 -- local function find_function_clause(node)
 --   if node == nil then return nil
