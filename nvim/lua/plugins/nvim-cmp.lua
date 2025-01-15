@@ -90,16 +90,16 @@ return {
         -- { name = "luasnip", max_item_count = 15 }, -- snippets
         -- { name = "buffer", max_item_count = 4 }, -- text within current buffer
         -- { name = "path", max_item_count = 4 }, -- file system paths
-        -- { name = "copilot" }, -- copilot
-        -- { name = "nvim_lsp" }, -- lsp
-        -- { name = "luasnip" }, -- snippets
-        -- { name = "buffer" }, -- text within current buffer
-        -- { name = "path" }, -- file system paths
-        { name = "copilot",  max_item_count = 10 }, -- copilot
-        { name = "nvim_lsp", max_item_count = 10 }, -- lsp
-        { name = "luasnip",  max_item_count = 4 },  -- snippets
-        { name = "buffer",   max_item_count = 4 },  -- text within current buffer
-        { name = "path",     max_item_count = 4 },  -- file system paths
+        { name = "nvim_lsp" }, -- lsp
+        { name = "copilot" }, -- copilot
+        { name = "luasnip" }, -- snippets
+        { name = "buffer" }, -- text within current buffer
+        { name = "path" }, -- file system paths
+        -- { name = "copilot",  max_item_count = 10 }, -- copilot
+        -- { name = "nvim_lsp", max_item_count = 10 }, -- lsp
+        -- { name = "luasnip",  max_item_count = 4 },  -- snippets
+        -- { name = "buffer",   max_item_count = 4 },  -- text within current buffer
+        -- { name = "path",     max_item_count = 4 },  -- file system paths
       }),
       window = {
         -- Add borders to completions popups
