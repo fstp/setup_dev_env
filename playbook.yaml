@@ -131,6 +131,15 @@
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/go"
 
+    - name: "Install Just for command files (https://github.com/casey/just)"
+      ansible.builtin.shell: |
+        asdf plugin add just
+        asdf install just latest
+        asdf global just latest
+      args:
+        executable: /usr/bin/bash
+        creates: "{{ home }}/.asdf/shims/just"
+
     - name: "Install Neovim dependencies"
       become: true
       ansible.builtin.apt:
