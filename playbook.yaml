@@ -112,6 +112,11 @@
         . ~/.bashrc
         cargo install --locked zoxide
 
+    - name: "[Rust] Install htmlq, parse HTML like jq for JSON"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        cargo install --locked htmlq
+
     - name: "Install latest NodeJS using ASDF"
       ansible.builtin.shell: |
         . ~/.bashrc
