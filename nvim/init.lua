@@ -41,3 +41,6 @@ augroup highlight_yank
   autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank({higroup = "IncSearch", timeout = 1000})
 augroup END
 ]])
+
+-- Allow project specific .nvim.lua config files
+vim.opt.exrc = true
