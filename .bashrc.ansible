@@ -50,3 +50,7 @@ tvn() {
     fi
   done
 }
+
+# Shortcuts for virtualenv
+alias ac='source venv/bin/activate'
+alias dc='deactivate'
