@@ -48,6 +48,16 @@
         version: master
         update: false
 
+    - name: "Install Python package manager (uv)"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        asdf plugin add uv
+        asdf install uv latest
+        asdf global uv latest
+      args:
+        executable: /usr/bin/bash
+        creates: "{{ home }}/.asdf/shims/uv"
+
     - name: "Install latest Erlang using ASDF"
       ansible.builtin.shell: |
         . ~/.bashrc
