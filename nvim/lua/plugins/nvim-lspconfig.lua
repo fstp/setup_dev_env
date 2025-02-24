@@ -48,7 +48,7 @@ return {
         'pyright',
         --'erlangls',
         --'angularls',
-        --'elixirls',
+        'elixirls',
         'ansiblels',
         'rust_analyzer',
         -- 'tsserver',
@@ -97,8 +97,8 @@ return {
     })
 
     -- Manual setup for Erlang/Elixir (build language servers from source)
-    lspconfig.erlangls.setup {}
-    lspconfig.elixirls.setup {}
+    -- lspconfig.erlangls.setup {}
+    -- lspconfig.elixirls.setup {}
 
     -- Lua LSP settings
     lspconfig.lua_ls.setup {
