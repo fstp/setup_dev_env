@@ -31,8 +31,8 @@ keymap.set("n", "<leader>tp", ":tabp<CR>") -- previous tab
 -- Quickfix keymaps
 keymap.set("n", "<leader>qo", ":copen<CR>") -- open quickfix list
 keymap.set("n", "<leader>qf", ":cfirst<CR>") -- jump to first quickfix list item
-keymap.set("n", "<leader>qn", ":cnext<CR>") -- jump to next quickfix list item
-keymap.set("n", "<leader>qp", ":cprev<CR>") -- jump to prev quickfix list item
+-- keymap.set("n", "<leader>qn", ":cnext<CR>") -- jump to next quickfix list item
+-- keymap.set("n", "<leader>qp", ":cprev<CR>") -- jump to prev quickfix list item
 keymap.set("n", "<leader>ql", ":clast<CR>") -- jump to last quickfix list item
 keymap.set("n", "<leader>qc", ":cclose<CR>") -- close quickfix list
 
@@ -62,7 +62,7 @@ keymap.set('n', '<leader>fi', require('telescope.builtin').lsp_incoming_calls, {
 keymap.set('n', '<leader>fm', require('telescope.builtin').marks, {})
 keymap.set('n', '<leader>fj', require('telescope.builtin').jumplist, {})
 --keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, {})
-keymap.set('n', '<leader>fw', function() require('telescope.builtin').current_buffer_fuzzy_find{default_text = vim.fn.expand("<cword>")} end)
+-- keymap.set('n', '<leader>fw', function() require('telescope.builtin').current_buffer_fuzzy_find{default_text = vim.fn.expand("<cword>")} end)
 keymap.set('n', '<leader>fr', require('telescope.builtin').resume, {})
 keymap.set('n', '<leader>fn', require('telescope').extensions.neoclip.default, {})
 keymap.set('n', '<leader>ft', require('telescope-tabs').list_tabs, {})
