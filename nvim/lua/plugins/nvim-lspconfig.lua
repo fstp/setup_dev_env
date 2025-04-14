@@ -55,6 +55,7 @@ return {
         'biome',
         'gopls',
         'tailwindcss',
+        'svelte',
       }
     })
 

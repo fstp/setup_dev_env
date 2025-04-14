@@ -124,6 +124,7 @@ keymap.set('n', '<leader>wp', current_buffer, {})
 
 -- Remote management
 keymap.set('n', '<leader>rp', '<cmd>silent !~/script/rsync_push<CR>')
+keymap.set('n', '<leader>rg', '<cmd>silent !~/script/rsync_get<CR>')
 
 local accept_word = function()
   require("copilot.suggestion").accept_word({})
