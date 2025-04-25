@@ -61,7 +61,7 @@ return {
             size = 0.10
           }
         },
-        size = 40,
+        size = 80,
         position = "left", -- Can be "left" or "right"
       },
       {
@@ -69,7 +69,7 @@ return {
           "repl",
           "console",
         },
-        size = 10,
+        size = 40,
         position = "bottom", -- Can be "bottom" or "top"
       }
     },
