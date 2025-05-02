@@ -32,7 +32,6 @@ rfv() {
     --bind 'enter:execute(nvim {1} +{2})'
 }
 
-export PATH=$PATH:~/.cargo/bin
 eval "$(zoxide init bash)"
 
 # Git aliases

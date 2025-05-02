@@ -76,14 +76,16 @@
         update: false
 
     - name: "Build rebar3"
-      ansible.builtin.shell: . ~/bashrc && cd {{ home }}/rebar3 && ./bootstrap
+      ansible.builtin.shell: . ~/.bashrc && cd {{ home }}/rebar3 && ./bootstrap
       args:
+        executable: /usr/bin/bash
         creates: "{{ home }}/rebar3/_build/prod/bin/rebar3"
 
     - name: "Install rebar3"
       become: true
-      ansible.builtin.shell: . ~/bashrc && cp -f {{ home }}/rebar3/rebar3 /usr/local/bin
+      ansible.builtin.shell: . ~/.bashrc && cp -f {{ home }}/rebar3/rebar3 /usr/local/bin
       args:
+        executable: /usr/bin/bash
         creates: /usr/local/bin/rebar3
 
     - name: "Install latest Elixir using ASDF"
@@ -111,6 +113,9 @@
         . ~/.bashrc
         cargo install --locked television
         mkdir -p ~/.config/television
+        asdf reshim rust
+      args:
+        executable: /usr/bin/bash
 
     - name: "[Rust] Install custom Television channels"
       ansible.builtin.copy:
@@ -121,11 +126,17 @@
       ansible.builtin.shell: |
         . ~/.bashrc
         cargo install --locked zoxide
+        asdf reshim rust
+      args:
+        executable: /usr/bin/bash
 
     - name: "[Rust] Install htmlq, parse HTML like jq for JSON"
       ansible.builtin.shell: |
         . ~/.bashrc
         cargo install --locked htmlq
+        asdf reshim rust
+      args:
+        executable: /usr/bin/bash
 
     - name: "Install latest NodeJS using ASDF"
       ansible.builtin.shell: |
@@ -139,6 +150,7 @@
 
     - name: "Install latest Go using ASDF"
       ansible.builtin.shell: |
+        . ~/.bashrc
         asdf plugin add golang
         asdf install golang latest
         asdf global golang latest
@@ -148,6 +160,7 @@
 
     - name: "Install Just for command files (https://github.com/casey/just)"
       ansible.builtin.shell: |
+        . ~/.bashrc
         asdf plugin add just
         asdf install just latest
         asdf global just latest
