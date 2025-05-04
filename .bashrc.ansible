@@ -7,8 +7,12 @@ shopt -s histappend
 export VISUAL=nvim
 export EDITOR=${VISUAL}
 
-. "$HOME/.asdf/asdf.sh"
-. "$HOME/.asdf/completions/asdf.bash"
+export PATH="$HOME/bin:$PATH"
+export ASDF_DATA_DIR="$HOME/.asdf"
+export PATH="$ASDF_DATA_DIR/shims:$PATH"
+
+# . "$HOME/.asdf/asdf.sh"
+# . "$HOME/.asdf/completions/asdf.bash"
 
 source /usr/share/doc/fzf/examples/key-bindings.bash || true
 export HISTCONTROL=ignoreboth:erasedups

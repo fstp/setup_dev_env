@@ -2,9 +2,9 @@
 ---
 - name: "Set up development environment"
   hosts: "*"
-  remote_user: "{{ username }}"
-  vars_files:
-    - variables.yaml
+  vars:
+    home: "{{ ansible_env.HOME }}"
+    bin_dir: "{{ home }}/bin"
   pre_tasks:
     - name: "Update apt cache if needed"
       become: true
@@ -12,6 +12,12 @@
         update_cache: true
         cache_valid_time: 3600
   tasks:
+    - name: "Create user bin directory"
+      ansible.builtin.file:
+        path: "{{ bin_dir }}"
+        state: directory
+        mode: '0755'
+
     - name: "Upload Ansible bashrc file"
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/.bashrc.ansible"
@@ -41,19 +47,38 @@
           - git
           - curl
 
-    - name: "Clone ASDF repo"
-      ansible.builtin.git:
-        repo: https://github.com/asdf-vm/asdf.git
-        dest: "{{ home }}/.asdf"
-        version: master
-        update: false
+    - name: "Download ASDF release"
+      ansible.builtin.get_url:
+       url: https://github.com/asdf-vm/asdf/releases/download/v0.16.7/asdf-v0.16.7-linux-amd64.tar.gz
+       dest: "{{ home }}/asdf.tar.gz"
+       mode: '0644'
+
+    - name: "Extract ASDF release"
+      ansible.builtin.unarchive:
+       src: "{{ home }}/asdf.tar.gz"
+       dest: "{{ bin_dir }}"
+       remote_src: yes
+
+    - name: "Regenerate ASDF shims"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        asdf reshim
+      args:
+        executable: /usr/bin/bash
+
+    # - name: "Clone ASDF repo"
+    #   ansible.builtin.git:
+    #     repo: https://github.com/asdf-vm/asdf.git
+    #     dest: "{{ home }}/.asdf"
+    #     version: master
+    #     update: false
 
     - name: "Install Python package manager (uv)"
       ansible.builtin.shell: |
         . ~/.bashrc
         asdf plugin add uv
         asdf install uv latest
-        asdf global uv latest
+        asdf set --home uv latest
       args:
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/uv"
@@ -63,7 +88,7 @@
         . ~/.bashrc
         asdf plugin add erlang
         asdf install erlang latest
-        asdf global erlang latest
+        asdf set --home erlang latest
       args:
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/erl"
@@ -93,7 +118,7 @@
         . ~/.bashrc
         asdf plugin add elixir
         asdf install elixir latest
-        asdf global elixir latest
+        asdf set --home elixir latest
       args:
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/iex"
@@ -103,7 +128,7 @@
         . ~/.bashrc
         asdf plugin add rust
         asdf install rust latest
-        asdf global rust latest
+        asdf set --home rust latest
       args:
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/rustc"
@@ -143,7 +168,7 @@
         . ~/.bashrc
         asdf plugin add nodejs
         asdf install nodejs latest
-        asdf global nodejs latest
+        asdf set --home nodejs latest
       args:
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/node"
@@ -153,7 +178,7 @@
         . ~/.bashrc
         asdf plugin add golang
         asdf install golang latest
-        asdf global golang latest
+        asdf set --home golang latest
       args:
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/go"
@@ -163,7 +188,7 @@
         . ~/.bashrc
         asdf plugin add just
         asdf install just latest
-        asdf global just latest
+        asdf set --home just latest
       args:
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/just"
@@ -302,9 +327,9 @@
     - name: "Install latest Lua using ASDF"
       ansible.builtin.shell: |
         . ~/.bashrc
-        asdf plugin-add lua https://github.com/Stratus3D/asdf-lua.git
+        asdf plugin add lua https://github.com/Stratus3D/asdf-lua.git
         asdf install lua latest
-        asdf global lua latest
+        asdf set --home lua latest
       args:
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/lua"
