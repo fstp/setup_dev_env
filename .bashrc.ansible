@@ -45,7 +45,8 @@ alias gs='git status'
 alias gau='git add -u'
 
 tvn() {
-  tv "$1" | sed -e 's/:/ \+/g' | while read -r first second; do
+  local arg="${1:-files}"
+  tv "$arg" | sed -e 's/:/ \+/g' | while read -r first second; do
     if [ -n "${second// /}" ]; then
       nvim "$first" "$second"
     else
