@@ -26,6 +26,7 @@ return {
       'html',
       'css',
       'tsx',
+      'diff',
     },
   },
   config = function (_, opts)
