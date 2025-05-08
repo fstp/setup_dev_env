@@ -83,19 +83,19 @@ return {
     end
 
     -- Call setup on each LSP server
-    require('mason-lspconfig').setup_handlers({
-      function(server_name)
-        lspconfig[server_name].setup({
-          on_attach = lsp_attach,
-          capabilities = lsp_capabilities,
-          handlers = {
-            -- Add borders to LSP popups
-            ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' }),
-            ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' }),
-          }
-        })
-      end
-    })
+    -- require('mason-lspconfig').setup_handlers({
+    --   function(server_name)
+    --     lspconfig[server_name].setup({
+    --       on_attach = lsp_attach,
+    --       capabilities = lsp_capabilities,
+    --       handlers = {
+    --         -- Add borders to LSP popups
+    --         ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' }),
+    --         ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' }),
+    --       }
+    --     })
+    --   end
+    -- })
 
     -- Manual setup for Erlang/Elixir (build language servers from source)
     -- lspconfig.erlangls.setup {}
