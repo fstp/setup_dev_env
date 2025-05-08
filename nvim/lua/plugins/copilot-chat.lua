@@ -10,6 +10,11 @@ return {
       -- debug = true, -- Enable debugging
       debug = false, -- Enable debugging
       -- See Configuration section for rest
+      mappings = {
+        reset = {
+          normal = '<C-r>',
+        },
+      },
     },
     -- See Commands section for default commands if you want to lazy load on them
   },
