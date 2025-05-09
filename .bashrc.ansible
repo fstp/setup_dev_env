@@ -10,6 +10,7 @@ export EDITOR=${VISUAL}
 export PATH="$HOME/bin:$PATH"
 export ASDF_DATA_DIR="$HOME/.asdf"
 export PATH="$ASDF_DATA_DIR/shims:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # . "$HOME/.asdf/asdf.sh"
 # . "$HOME/.asdf/completions/asdf.bash"

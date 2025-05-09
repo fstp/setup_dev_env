@@ -9,10 +9,11 @@ return {
     opts = {
       -- debug = true, -- Enable debugging
       debug = false, -- Enable debugging
+      model = "claude-3.5-sonnet",
       -- See Configuration section for rest
       mappings = {
         reset = {
-          normal = '<C-r>',
+          normal = "<C-r>",
         },
       },
     },
