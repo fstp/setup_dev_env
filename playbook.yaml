@@ -54,6 +54,7 @@
           - net-tools
           - git
           - curl
+          - libwxgtk3.2-dev
 
     - name: "Download ASDF release"
       ansible.builtin.get_url:
