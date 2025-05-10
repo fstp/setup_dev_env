@@ -10,7 +10,6 @@ export EDITOR=${VISUAL}
 export PATH="$HOME/bin:$PATH"
 export ASDF_DATA_DIR="$HOME/.asdf"
 export PATH="$ASDF_DATA_DIR/shims:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
 
 # . "$HOME/.asdf/asdf.sh"
 # . "$HOME/.asdf/completions/asdf.bash"
@@ -60,3 +59,9 @@ tvn() {
 # Shortcuts for virtualenv
 alias ac='source venv/bin/activate'
 alias dc='deactivate'
+
+
+# OpenMP env variables for BLIS (https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/BLIS.md)
+export OMP_PROC_BIND=close
+export OMP_PLACES=cores
+export BLIS_NUM_THREADS=16
