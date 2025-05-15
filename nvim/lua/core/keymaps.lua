@@ -69,7 +69,7 @@ keymap.set('n', '<leader>ft', require('telescope-tabs').list_tabs, {})
 
 local floating_win = -1
 local floating_height = 50
-local floating_width = 80
+local floating_width = 100
 
 local close_floating = function(_)
   if vim.api.nvim_win_is_valid(floating_win) then

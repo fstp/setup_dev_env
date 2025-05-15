@@ -28,10 +28,24 @@ return {
       'tsx',
       'diff',
     },
+    textobjects = {
+      select = {
+        enable = true,
+        lookahead = true,
+        keymaps = {
+          ['af'] = '@function.outer',
+          ['if'] = '@function.inner',
+          ['ac'] = '@class.outer',
+          ['ic'] = '@class.inner',
+          ['as'] = '@scope',
+          ['ad'] = '@parameter.outer',
+          ['id'] = '@parameter.inner',
+        },
+      },
+    },
   },
-  config = function (_, opts)
+  config = function(_, opts)
     local configs = require("nvim-treesitter.configs")
     configs.setup(opts)
   end
 }
-
