@@ -44,6 +44,9 @@ alias gd='git diff'
 alias gs='git status'
 alias gau='git add -u'
 alias gl='git log --oneline --graph --decorate --all'
+alias gco='git checkout'
+alias gc='git commit'
+alias gf='git fetch'
 
 tvn() {
   local arg="${1:-files}"
@@ -60,12 +63,14 @@ tvn() {
 alias ac='source venv/bin/activate'
 alias dc='deactivate'
 
-
 # OpenMP env variables for BLIS (https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/BLIS.md)
 export OMP_PROC_BIND=close
 export OMP_PLACES=cores
 export BLIS_NUM_THREADS=16
 
+# CUDA stuff
+export PATH=/usr/local/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
 # Add current git branch to command prompt
 parse_git_branch() {
