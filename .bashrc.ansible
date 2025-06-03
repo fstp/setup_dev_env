@@ -47,6 +47,9 @@ alias gl='git log --oneline --graph --decorate --all'
 alias gco='git checkout'
 alias gc='git commit'
 alias gf='git fetch'
+alias gca='git commit -C HEAD --amend'
+
+alias tree='tree -A -h -C'
 
 tvn() {
   local arg="${1:-files}"
