@@ -291,6 +291,11 @@
           [global]
           break-system-packages = true
 
+    - name: "Install neovim pip package (for communicating with Python)"
+      ansible.builtin.pip:
+        name: neovim
+        state: present
+
     - name: "Install ripgrep, fzf and tmux"
       become: true
       ansible.builtin.apt:
