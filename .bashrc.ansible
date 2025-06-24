@@ -48,6 +48,7 @@ alias gco='git checkout'
 alias gc='git commit'
 alias gf='git fetch'
 alias gca='git commit -C HEAD --amend'
+alias gb='git branch'
 
 alias tree='tree -A -h -C'
 
