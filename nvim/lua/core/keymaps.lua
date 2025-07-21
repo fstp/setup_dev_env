@@ -4,9 +4,9 @@ vim.g.mapleader = " "
 local keymap = vim.keymap
 
 -- General keymaps
-keymap.set("i", "jk", "<ESC>") -- exit insert mode with jk 
-keymap.set("i", "ii", "<ESC>") -- exit insert mode with ii
-keymap.set("v", "ii", "<ESC>") -- exit visual mode with ii
+keymap.set("i", "jk", "<ESC>")                 -- exit insert mode with jk
+keymap.set("i", "ii", "<ESC>")                 -- exit insert mode with ii
+keymap.set("v", "ii", "<ESC>")                 -- exit visual mode with ii
 keymap.set("n", "gx", ":!open <c-r><c-a><CR>") -- open URL under cursor
 
 -- Window movement
@@ -16,10 +16,10 @@ keymap.set("n", "<C-j>", "<C-w>j")
 keymap.set("n", "<C-k>", "<C-w>k")
 
 -- Tab management
-keymap.set("n", "<leader>to", ":tabnew<CR>") -- open a new tab
+keymap.set("n", "<leader>to", ":tabnew<CR>")   -- open a new tab
 keymap.set("n", "<leader>tx", ":tabclose<CR>") -- close a tab
-keymap.set("n", "<leader>tn", ":tabn<CR>") -- next tab
-keymap.set("n", "<leader>tp", ":tabp<CR>") -- previous tab
+keymap.set("n", "<leader>tn", ":tabn<CR>")     -- next tab
+keymap.set("n", "<leader>tp", ":tabp<CR>")     -- previous tab
 
 -- Diff keymaps
 -- keymap.set("n", "<leader>cc", ":diffput<CR>") -- put diff from current to other during diff
@@ -29,24 +29,24 @@ keymap.set("n", "<leader>tp", ":tabp<CR>") -- previous tab
 -- keymap.set("n", "<leader>cp", "[c") -- previous diff hunk
 
 -- Quickfix keymaps
-keymap.set("n", "<leader>qo", ":copen<CR>") -- open quickfix list
+keymap.set("n", "<leader>qo", ":copen<CR>")  -- open quickfix list
 keymap.set("n", "<leader>qf", ":cfirst<CR>") -- jump to first quickfix list item
 -- keymap.set("n", "<leader>qn", ":cnext<CR>") -- jump to next quickfix list item
 -- keymap.set("n", "<leader>qp", ":cprev<CR>") -- jump to prev quickfix list item
-keymap.set("n", "<leader>ql", ":clast<CR>") -- jump to last quickfix list item
+keymap.set("n", "<leader>ql", ":clast<CR>")  -- jump to last quickfix list item
 keymap.set("n", "<leader>qc", ":cclose<CR>") -- close quickfix list
 
 -- Vim-maximizer
 keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>") -- toggle maximize tab
 
 -- Nvim-tree
-keymap.set("n", "<leader>ee", ":NvimTreeToggle<CR>") -- toggle file explorer
-keymap.set("n", "<leader>er", ":NvimTreeFocus<CR>") -- toggle focus to file explorer
+keymap.set("n", "<leader>ee", ":NvimTreeToggle<CR>")   -- toggle file explorer
+keymap.set("n", "<leader>er", ":NvimTreeFocus<CR>")    -- toggle focus to file explorer
 keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>") -- find file in file explorer
 
 -- Telescope
 keymap.set('n', '<leader>fp', ":Telescope projects<CR>")
-keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, {})
+keymap.set('n', '<leader>ff', function(_) require('telescope.builtin').find_files { hidden = true } end, {})
 keymap.set('n', '<leader>fl', require('telescope.builtin').oldfiles, {})
 
 -- keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, {})
@@ -56,7 +56,7 @@ keymap.set('n', '<leader>fb', require('telescope.builtin').buffers, {})
 keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, {})
 keymap.set('n', '<leader>fs', require('telescope.builtin').current_buffer_fuzzy_find, {})
 keymap.set('n', '<leader>fo', require('telescope.builtin').lsp_document_symbols, {})
-keymap.set('n', '<leader>fi', require('telescope.builtin').lsp_incoming_calls, {})
+keymap.set('n', '<leader>fi', require('telescope.builtin').registers, {})
 --keymap.set('n', '<leader>fm', function() require('telescope.builtin').treesitter({default_text=":method:"}) end)
 -- keymap.set('n', '<leader>fm', require('telescope.builtin').treesitter, {})
 keymap.set('n', '<leader>fm', require('telescope.builtin').marks, {})
@@ -72,48 +72,57 @@ local floating_height = 50
 local floating_width = 100
 
 local close_floating = function(_)
-  if vim.api.nvim_win_is_valid(floating_win) then
-    vim.api.nvim_win_close(floating_win, false)
-    floating_win = -1
-  end
+    if vim.api.nvim_win_is_valid(floating_win) then
+        vim.api.nvim_win_close(floating_win, false)
+        floating_win = -1
+    end
 end
 
 local focus_floating = function(_)
-  if vim.api.nvim_win_is_valid(floating_win) then
-    vim.api.nvim_set_current_win(floating_win)
-  end
+    if vim.api.nvim_win_is_valid(floating_win) then
+        vim.api.nvim_set_current_win(floating_win)
+    end
 end
 
 local open_floating = function()
-  close_floating({})
-  floating_win = vim.api.nvim_open_win(0, true,
-    {relative="win", row=50, col=100, width=floating_width, height=floating_height, border="rounded", anchor="SW"})
+    close_floating({})
+    floating_win = vim.api.nvim_open_win(0, true,
+        {
+            relative = "win",
+            row = 50,
+            col = 100,
+            width = floating_width,
+            height = floating_height,
+            border = "rounded",
+            anchor =
+            "SW"
+        })
 end
 
 local current_buffer = function(_)
-  vim.print(vim.fn.expand("%:p"))
+    vim.print(vim.fn.expand("%:p"))
 end
 
 local wrapper_floating = function(opts)
-  open_floating()
-  return require('telescope.builtin').lsp_definitions(opts)
+    open_floating()
+    return require('telescope.builtin').lsp_definitions(opts)
 end
 
 local wrapper = function(opts)
-  local lookup = {
-    ["t"] = "tab",
-    ["s"] = "split",
-    ["v"] = "vsplit",
-  }
-  local user_input = vim.fn.input("[tab, split, vsplit]: ")
-  if opts == nil then
-    opts = {reuse_win = false}
-  end
-  if user_input ~= "" then
-    local split = lookup[user_input]
-    opts.jump_type = split
-  end
-  return require('telescope.builtin').lsp_definitions(opts)
+    local lookup = {
+        ["t"] = "tab",
+        ["s"] = "split",
+        ["v"] = "vsplit",
+    }
+    local user_input = vim.fn.input("[tab, split, vsplit]: ")
+    if opts == nil then
+        opts = { reuse_win = false }
+    end
+    if user_input ~= "" then
+        local split = lookup[user_input]
+        opts.jump_type = split
+    end
+    return require('telescope.builtin').lsp_definitions(opts)
 end
 
 -- Floating window management
@@ -127,17 +136,17 @@ keymap.set('n', '<leader>rp', '<cmd>silent !~/script/rsync_push<CR>')
 keymap.set('n', '<leader>rg', '<cmd>silent !~/script/rsync_get<CR>')
 
 local accept_word = function()
-  require("copilot.suggestion").accept_word({})
-  require("copilot.suggestion").next({})
+    require("copilot.suggestion").accept_word({})
+    require("copilot.suggestion").next({})
 end
 
 local accept_line = function()
-  require("copilot.suggestion").accept_line({})
-  require("copilot.suggestion").next({})
+    require("copilot.suggestion").accept_line({})
+    require("copilot.suggestion").next({})
 end
 
 local clear_suggestion = function()
-  require("copilot.suggestion").dismiss({})
+    require("copilot.suggestion").dismiss({})
 end
 
 -- Copilot
@@ -177,21 +186,21 @@ keymap.set('n', '<M-k>', '<cmd>cprev<CR>zz')
 
 -- Filetype-specific keymaps (these can be done in the ftplugin directory instead if you prefer)
 keymap.set("n", '<leader>go', function()
-  if vim.bo.filetype == 'python' then
-    vim.api.nvim_command('PyrightOrganizeImports')
-  end
+    if vim.bo.filetype == 'python' then
+        vim.api.nvim_command('PyrightOrganizeImports')
+    end
 end)
 
 keymap.set("n", '<leader>tc', function()
-  if vim.bo.filetype == 'python' then
-    require('dap-python').test_class();
-  end
+    if vim.bo.filetype == 'python' then
+        require('dap-python').test_class();
+    end
 end)
 
 keymap.set("n", '<leader>tm', function()
-  if vim.bo.filetype == 'python' then
-    require('dap-python').test_method();
-  end
+    if vim.bo.filetype == 'python' then
+        require('dap-python').test_method();
+    end
 end)
 
 -- Quickfix stuff
@@ -201,7 +210,7 @@ keymap.set("n", "<leader>qa", function()
     local lnum = vim.fn.line(".")
     local col = vim.fn.col(".")
     local text = vim.api.nvim_get_current_line()
-    vim.fn.setqflist({{bufnr = bufnr, lnum = lnum, col = col, text = text}}, "a")
+    vim.fn.setqflist({ { bufnr = bufnr, lnum = lnum, col = col, text = text } }, "a")
 end)
 
 keymap.set("n", "<leader>qs", function()
@@ -218,15 +227,22 @@ keymap.set("n", "<leader>dc", "<cmd>lua require'dap'.continue()<cr>")
 keymap.set("n", "<leader>dj", "<cmd>lua require'dap'.step_over()<cr>")
 keymap.set("n", "<leader>dk", "<cmd>lua require'dap'.step_into()<cr>")
 keymap.set("n", "<leader>do", "<cmd>lua require'dap'.step_out()<cr>")
-keymap.set("n", '<leader>dd', function() require('dap').disconnect(); require('dapui').close(); end)
-keymap.set("n", '<leader>dt', function() require('dap').terminate(); require('dapui').close(); end)
+keymap.set("n", '<leader>dd', function()
+    require('dap').disconnect(); require('dapui').close();
+end)
+keymap.set("n", '<leader>dt', function()
+    require('dap').terminate(); require('dapui').close();
+end)
 keymap.set("n", "<leader>dr", "<cmd>lua require'dap'.repl.toggle()<cr>")
 keymap.set("n", "<leader>dl", "<cmd>lua require'dap'.run_last()<cr>")
 keymap.set("n", '<leader>di', function() require "dap.ui.widgets".hover() end)
-keymap.set("n", '<leader>d?', function() local widgets = require "dap.ui.widgets"; widgets.centered_float(widgets.scopes) end)
+keymap.set("n", '<leader>d?',
+    function()
+        local widgets = require "dap.ui.widgets"; widgets.centered_float(widgets.scopes)
+    end)
 keymap.set("n", '<leader>df', '<cmd>Telescope dap frames<cr>')
 keymap.set("n", '<leader>dh', '<cmd>Telescope dap commands<cr>')
-keymap.set("n", '<leader>de', function() require('telescope.builtin').diagnostics({default_text=":E:"}) end)
+keymap.set("n", '<leader>de', function() require('telescope.builtin').diagnostics({ default_text = ":E:" }) end)
 keymap.set("n", "<leader>du", "<cmd>lua require'dap'.run_to_cursor()<cr>")
 keymap.set("n", "<leader>dz", "<cmd>lua require'dapui'.toggle({reset = true})<cr>")
 

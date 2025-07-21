@@ -43,7 +43,7 @@ alias gds='git diff --staged'
 alias gd='git diff'
 alias gs='git status'
 alias gau='git add -u'
-alias gl='git log --oneline --graph --decorate --all'
+alias gl='git log --oneline --graph --decorate'
 alias gco='git checkout'
 alias gc='git commit'
 alias gf='git fetch'
@@ -62,6 +62,9 @@ tvn() {
     fi
   done
 }
+
+alias fdg='fd -I -H -g'
+alias fdr='fd -I -H --regex'
 
 # Shortcuts for virtualenv
 alias ac='source venv/bin/activate'
