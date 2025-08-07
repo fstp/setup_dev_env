@@ -68,7 +68,8 @@ return {
                         ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
                     }
                 }
-            }
+            },
+            fzf = {}
         }
         telescope.setup(opts)
     end

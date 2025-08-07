@@ -20,6 +20,19 @@ keymap.set("n", "<leader>to", ":tabnew<CR>")   -- open a new tab
 keymap.set("n", "<leader>tx", ":tabclose<CR>") -- close a tab
 keymap.set("n", "<leader>tn", ":tabn<CR>")     -- next tab
 keymap.set("n", "<leader>tp", ":tabp<CR>")     -- previous tab
+keymap.set('n', '<leader>tf', require('telescope-tabs').list_tabs, {})
+
+-- Overlook popup bindings
+keymap.set("n", "<leader>pd", require("overlook.api").peek_definition, { desc = "Peek definition" })
+keymap.set("n", "<leader>pp", require("overlook.api").peek_cursor, { desc = "Peek cursor" })
+keymap.set("n", "<leader>pu", require("overlook.api").restore_popup, { desc = "Restore last popup" })
+keymap.set("n", "<leader>pU", require("overlook.api").restore_all_popups, { desc = "Restore all popups" })
+keymap.set("n", "<leader>pc", require("overlook.api").close_all, { desc = "Close all popups" })
+keymap.set("n", "<leader>ps", require("overlook.api").open_in_split, { desc = "Open popup in split" })
+keymap.set("n", "<leader>pv", require("overlook.api").open_in_vsplit, { desc = "Open popup in vsplit" })
+keymap.set("n", "<leader>pt", require("overlook.api").open_in_tab, { desc = "Open popup in tab" })
+keymap.set("n", "<leader>po", require("overlook.api").open_in_original_window, { desc = "Open popup in current window" })
+keymap.set("n", "<leader>pf", require("overlook.api").focus, { desc = "Focus on the popup" })
 
 -- Diff keymaps
 -- keymap.set("n", "<leader>cc", ":diffput<CR>") -- put diff from current to other during diff
@@ -65,48 +78,46 @@ keymap.set('n', '<leader>fj', require('telescope.builtin').jumplist, {})
 -- keymap.set('n', '<leader>fw', function() require('telescope.builtin').current_buffer_fuzzy_find{default_text = vim.fn.expand("<cword>")} end)
 keymap.set('n', '<leader>fr', require('telescope.builtin').resume, {})
 keymap.set('n', '<leader>fn', require('telescope').extensions.neoclip.default, {})
-keymap.set('n', '<leader>ft', require('telescope-tabs').list_tabs, {})
+keymap.set('n', '<leader>ft', require('telescope.builtin').tagstack, {})
+keymap.set('n', '<leader>fq', require('telescope.builtin').quickfix, {})
 
-local floating_win = -1
-local floating_height = 50
-local floating_width = 100
+-- local floating_win = -1
+-- local floating_height = 50
+-- local floating_width = 100
 
-local close_floating = function(_)
-    if vim.api.nvim_win_is_valid(floating_win) then
-        vim.api.nvim_win_close(floating_win, false)
-        floating_win = -1
-    end
-end
+-- local close_floating = function(_)
+--     if vim.api.nvim_win_is_valid(floating_win) then
+--         vim.api.nvim_win_close(floating_win, false)
+--         floating_win = -1
+--     end
+-- end
 
-local focus_floating = function(_)
-    if vim.api.nvim_win_is_valid(floating_win) then
-        vim.api.nvim_set_current_win(floating_win)
-    end
-end
+-- local focus_floating = function(_)
+--     if vim.api.nvim_win_is_valid(floating_win) then
+--         vim.api.nvim_set_current_win(floating_win)
+--     end
+-- end
 
-local open_floating = function()
-    close_floating({})
-    floating_win = vim.api.nvim_open_win(0, true,
-        {
-            relative = "win",
-            row = 50,
-            col = 100,
-            width = floating_width,
-            height = floating_height,
-            border = "rounded",
-            anchor =
-            "SW"
-        })
-end
+-- local open_floating = function()
+--     close_floating({})
+--     floating_win = vim.api.nvim_open_win(0, true,
+--         {
+--             relative = "win",
+--             row = 50,
+--             col = 100,
+--             width = floating_width,
+--             height = floating_height,
+--             border = "rounded",
+--             anchor =
+--             "SW"
+--         })
+-- end
 
-local current_buffer = function(_)
-    vim.print(vim.fn.expand("%:p"))
-end
 
-local wrapper_floating = function(opts)
-    open_floating()
-    return require('telescope.builtin').lsp_definitions(opts)
-end
+-- local wrapper_floating = function(opts)
+--     open_floating()
+--     return require('telescope.builtin').lsp_definitions(opts)
+-- end
 
 local wrapper = function(opts)
     local lookup = {
@@ -126,9 +137,13 @@ local wrapper = function(opts)
 end
 
 -- Floating window management
-keymap.set('n', '<leader>wc', close_floating, {})
-keymap.set('n', '<leader>wf', focus_floating, {})
-keymap.set('n', '<leader>wo', wrapper_floating, {})
+-- keymap.set('n', '<leader>wc', close_floating, {})
+-- keymap.set('n', '<leader>wf', focus_floating, {})
+-- keymap.set('n', '<leader>wo', wrapper_floating, {})
+
+local current_buffer = function(_)
+    vim.print(vim.fn.expand("%:p"))
+end
 keymap.set('n', '<leader>wp', current_buffer, {})
 
 -- Remote management
@@ -161,9 +176,8 @@ keymap.set('n', '<leader>cc', '<cmd>CopilotChatToggle<CR>')
 
 
 -- LSP
-keymap.set('n', '<leader>gg', '<cmd>lua vim.lsp.buf.hover()<CR>')
+-- keymap.set('n', '<leader>gg', '<cmd>lua vim.lsp.buf.hover()<CR>')
 keymap.set('n', '<leader>gd', wrapper, {})
---keymap.set('n', '<leader>gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
 keymap.set('n', '<leader>gD', '<cmd>lua vim.lsp.buf.declaration()<CR>')
 keymap.set('n', '<leader>gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')
 keymap.set('n', '<leader>gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
@@ -179,10 +193,6 @@ keymap.set('n', '<leader>gn', '<cmd>lua vim.diagnostic.goto_next()<CR>')
 keymap.set('n', '<leader>tr', '<cmd>lua vim.lsp.buf.document_symbol()<CR>')
 keymap.set('i', '<C-Space>', '<cmd>lua vim.lsp.buf.completion()<CR>')
 
--- Add all diagnostics from the current buffer to quickfix list
-keymap.set('n', '<leader>gq', '<cmd>lua vim.fn.setqflist(vim.diagnostic.toqflist(vim.diagnostic.get(0)))<CR>')
-keymap.set('n', '<M-j>', '<cmd>cnext<CR>zz')
-keymap.set('n', '<M-k>', '<cmd>cprev<CR>zz')
 
 -- Filetype-specific keymaps (these can be done in the ftplugin directory instead if you prefer)
 keymap.set("n", '<leader>go', function()
@@ -204,7 +214,6 @@ keymap.set("n", '<leader>tm', function()
 end)
 
 -- Quickfix stuff
---
 keymap.set("n", "<leader>qa", function()
     local bufnr = vim.api.nvim_get_current_buf()
     local lnum = vim.fn.line(".")
@@ -216,6 +225,11 @@ end)
 keymap.set("n", "<leader>qs", function()
     vim.fn.setqflist({})
 end)
+
+-- Add all diagnostics from the current buffer to quickfix list
+keymap.set('n', '<leader>dq', '<cmd>lua vim.fn.setqflist(vim.diagnostic.toqflist(vim.diagnostic.get(0)))<CR>')
+keymap.set('n', '<M-j>', '<cmd>cnext<CR>zz')
+keymap.set('n', '<M-k>', '<cmd>cprev<CR>zz')
 
 -- Debugging
 keymap.set("n", "<leader>bb", "<cmd>lua require'dap'.toggle_breakpoint()<cr>")
@@ -242,7 +256,8 @@ keymap.set("n", '<leader>d?',
     end)
 keymap.set("n", '<leader>df', '<cmd>Telescope dap frames<cr>')
 keymap.set("n", '<leader>dh', '<cmd>Telescope dap commands<cr>')
-keymap.set("n", '<leader>de', function() require('telescope.builtin').diagnostics({ default_text = ":E:" }) end)
+keymap.set("n", '<leader>de',
+    function() require('telescope.builtin').diagnostics({ default_text = ":E:", bufnr = 0 }) end)
 keymap.set("n", "<leader>du", "<cmd>lua require'dap'.run_to_cursor()<cr>")
 keymap.set("n", "<leader>dz", "<cmd>lua require'dapui'.toggle({reset = true})<cr>")
 
