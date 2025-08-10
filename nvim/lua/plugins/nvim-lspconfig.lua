@@ -56,7 +56,11 @@ return {
         'gopls',
         'tailwindcss',
         'svelte',
-      }
+      },
+      -- Disable automtic setup for lua_ls since we have custom settings
+      automatic_enable = {
+        exclude = { "lua_ls" }
+      },
     })
 
     require('mason-tool-installer').setup({
@@ -72,8 +76,9 @@ return {
       },
     })
 
-    -- There is an issue with mason-tools-installer running with VeryLazy, since it triggers on VimEnter which has already occurred prior to this plugin loading so we need to call install explicitly
-    -- https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim/issues/39
+    -- There is an issue with mason-tools-installer running with VeryLazy, since it triggers on
+    -- VimEnter which has already occurred prior to this plugin loading so we need to call install
+    -- explicitly (https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim/issues/39)
     vim.api.nvim_command('MasonToolsInstall')
 
     local lspconfig = require('lspconfig')
@@ -138,14 +143,14 @@ return {
       },
     }
 
-    lspconfig.tailwindcss.setup {
+    -- lspconfig.tailwindcss.setup {
       -- classAttributes = { "class", "className", "class:list", "classList", "ngClass" },
       -- includeLanguages = {
       --   eelixir = "html-eex",
       --   heex = "html",
       --   elixir = "html",
       -- }
-    }
+    -- }
 
     -- Globally configure all LSP floating preview popups (like hover, signature help, etc)
     local open_floating_preview = vim.lsp.util.open_floating_preview
