@@ -39,7 +39,7 @@ keymap.set("n", "<leader>ps", require("overlook.api").open_in_split, { desc = "O
 keymap.set("n", "<leader>pv", require("overlook.api").open_in_vsplit, { desc = "Open popup in vsplit" })
 keymap.set("n", "<leader>pt", require("overlook.api").open_in_tab, { desc = "Open popup in tab" })
 keymap.set("n", "<leader>po", require("overlook.api").open_in_original_window, { desc = "Open popup in current window" })
-keymap.set("n", "<leader>pf", require("overlook.api").focus, { desc = "Focus on the popup" })
+keymap.set("n", "<leader>pf", require("overlook.api").switch_focus, { desc = "Switch focus between popup/main window" })
 
 -- Diff keymaps
 -- keymap.set("n", "<leader>cc", ":diffput<CR>") -- put diff from current to other during diff
