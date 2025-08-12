@@ -38,7 +38,7 @@ vim.api.nvim_set_hl(0, 'WinSeparator', {fg = "#E19400"})
 vim.cmd([[
 augroup highlight_yank
   autocmd! TextYankPost
-  autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank({higroup = "IncSearch", timeout = 1000})
+  autocmd TextYankPost * silent! lua vim.hl.on_yank({higroup = "IncSearch", timeout = 500})
 augroup END
 ]])
 
