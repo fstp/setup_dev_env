@@ -128,19 +128,16 @@ keymap.set('n', '<leader>fq', require('telescope.builtin').quickfix, { desc = "S
 --     return require('telescope.builtin').lsp_definitions(opts)
 -- end
 
-local wrapper = function(opts)
+local wrapper = function(_)
   local lookup = {
     ["t"] = "tab",
     ["s"] = "split",
     ["v"] = "vsplit",
   }
+  local opts = { reuse_win = false, theme = "ivy" }
   local user_input = vim.fn.input("[tab, split, vsplit]: ")
-  if opts == nil then
-    opts = { reuse_win = false }
-  end
   if user_input ~= "" then
-    local split = lookup[user_input]
-    opts.jump_type = split
+    opts.jump_type = lookup[user_input]
   end
   return require('telescope.builtin').lsp_definitions(opts)
 end
