@@ -9,7 +9,7 @@ return {
     opts = {
       -- debug = true, -- Enable debugging
       debug = false, -- Enable debugging
-      model = "claude-3.5-sonnet",
+      model = "claude-3.7-sonnet-thought",
       -- See Configuration section for rest
       mappings = {
         reset = {

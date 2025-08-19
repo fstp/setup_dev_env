@@ -33,43 +33,43 @@ return {
         },
       },
       pickers = {
-        find_files = {
-          theme = "ivy"
-        },
+        -- find_files = {
+        --   theme = "ivy"
+        -- },
         buffers = {
-          theme = "ivy",
+          -- theme = "ivy",
           sort_mru = true,
         },
-        help_tags = {
-          theme = "ivy",
-        },
-        current_buffer_fuzz_find = {
-          theme = "ivy",
-        },
-        lsp_document_symbols = {
-          theme = "ivy",
-        },
-        jumplist = {
-          theme = "ivy",
-        },
-        marks = {
-          theme = "ivy",
-        },
-        tagstack = {
-          theme = "ivy",
-        },
-        quickfix = {
-          theme = "ivy",
-        },
-        oldfiles = {
-          theme = "ivy",
-        },
-        lsp_references = {
-          theme = "ivy",
-        },
-        current_buffer_fuzzy_find = {
-          theme = "ivy",
-        },
+        -- help_tags = {
+        --   theme = "ivy",
+        -- },
+        -- current_buffer_fuzz_find = {
+        --   theme = "ivy",
+        -- },
+        -- lsp_document_symbols = {
+        --   theme = "ivy",
+        -- },
+        -- jumplist = {
+        --   theme = "ivy",
+        -- },
+        -- marks = {
+        --   theme = "ivy",
+        -- },
+        -- tagstack = {
+        --   theme = "ivy",
+        -- },
+        -- quickfix = {
+        --   theme = "ivy",
+        -- },
+        -- oldfiles = {
+        --   theme = "ivy",
+        -- },
+        -- lsp_references = {
+        --   theme = "ivy",
+        -- },
+        -- current_buffer_fuzzy_find = {
+        --   theme = "ivy",
+        -- },
       }
     }
   end,
@@ -95,7 +95,7 @@ return {
     }
     opts.extensions = {
       live_grep_args = {
-        theme = "ivy",
+        -- theme = "ivy",
         debounce = 100,
         auto_quoting = false,
         mappings = {
