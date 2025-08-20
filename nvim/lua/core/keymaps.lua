@@ -179,9 +179,14 @@ end
 keymap.set('v', '<leader>cc', '<cmd>CopilotChatToggle<CR>', { desc = "Toggle Copilot Chat" })
 keymap.set('v', '<leader>ce', '<cmd>CopilotChatExplain<CR>', { desc = "Explain selected code" })
 keymap.set('v', '<leader>cd', '<cmd>CopilotChatDocs<CR>', { desc = "Generate docs for selection" })
-keymap.set('v', '<leader>cf', '<cmd>CopilotChatFix<CR>', { desc = "Fix selected code" })
+-- keymap.set('v', '<leader>cf', '<cmd>CopilotChatFix<CR>', { desc = "Fix selected code" })
 keymap.set('n', '<leader>cc', '<cmd>CopilotChatToggle<CR>', { desc = "Toggle Copilot Chat" })
 
+keymap.set('n', '<leader>cf', function()
+  require("CopilotChat").ask("#diagnostics Fix the errors and warnings please", {
+    selection = require("CopilotChat.select").buffer,
+  })
+end, { desc = "Fix buffer" })
 
 -- LSP
 -- keymap.set('n', '<leader>gg', '<cmd>lua vim.lsp.buf.hover()<CR>')

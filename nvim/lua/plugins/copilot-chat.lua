@@ -19,11 +19,9 @@ return {
     },
     config = function(_, opts)
       opts.window = {
-        layout = 'float',
-        -- relative = 'cursor',
-        width = 0.7,
-        height = 0.7,
-        -- row = 1,
+        -- layout = 'float',
+        -- width = 0.7,
+        -- height = 0.7,
         border = 'rounded',
         title = '🤖 AI Assistant',
         zindex = 100,
