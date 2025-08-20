@@ -50,7 +50,7 @@ return {
         --'angularls',
         'elixirls',
         'ansiblels',
-        'rust_analyzer',
+        -- 'rust_analyzer',
         -- 'tsserver',
         'biome',
         'gopls',
@@ -105,6 +105,9 @@ return {
     -- Manual setup for Erlang/Elixir (build language servers from source)
     -- lspconfig.erlangls.setup {}
     -- lspconfig.elixirls.setup {}
+
+    lspconfig.rust_analyzer.setup {}
+    lspconfig.gleam.setup {}
 
     -- Lua LSP settings
     lspconfig.lua_ls.setup {
