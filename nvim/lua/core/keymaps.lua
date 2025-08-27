@@ -5,9 +5,9 @@ local keymap = vim.keymap
 
 -- Load current project file
 keymap.set("n", "<leader>ll", function()
-    local basename = vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
-    vim.opt.rtp:append(vim.fn.getcwd())
-    require(basename)
+  local basename = vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+  vim.opt.rtp:append(vim.fn.getcwd())
+  require(basename)
 end, { desc = "Load current project lua file" })
 
 -- General keymaps
@@ -67,7 +67,7 @@ keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>") -- find file in file expl
 -- Telescope
 keymap.set('n', '<leader>fp', ":Telescope projects<CR>", { desc = "Find projects" })
 keymap.set('n', '<leader>ff', function(_) require('telescope.builtin').find_files { hidden = true } end,
-    { desc = "Find files" })
+  { desc = "Find files" })
 keymap.set('n', '<leader>fl', require('telescope.builtin').oldfiles, { desc = "Find recently opened files" })
 
 -- keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, {})
@@ -76,7 +76,7 @@ keymap.set('n', '<leader>fg', require('telescope').extensions.live_grep_args.liv
 keymap.set('n', '<leader>fb', require('telescope.builtin').buffers, { desc = "Find buffers" })
 keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = "Search help" })
 keymap.set('n', '<leader>fs', require('telescope.builtin').current_buffer_fuzzy_find,
-    { desc = "Fuzzy search current buffer" })
+  { desc = "Fuzzy search current buffer" })
 keymap.set('n', '<leader>fo', require('telescope.builtin').lsp_document_symbols, { desc = "Find LSP symbols" })
 keymap.set('n', '<leader>fi', require('telescope.builtin').registers, { desc = "Registers" })
 --keymap.set('n', '<leader>fm', function() require('telescope.builtin').treesitter({default_text=":method:"}) end)
@@ -90,7 +90,7 @@ keymap.set('n', '<leader>fn', require('telescope').extensions.neoclip.default, {
 keymap.set('n', '<leader>ft', require('telescope.builtin').tagstack, { desc = "Browse tagstack" })
 keymap.set('n', '<leader>fq', require('telescope.builtin').quickfix, { desc = "Search quickfix list" })
 keymap.set("n", '<leader>fd', function() require('telescope.builtin').diagnostics({ bufnr = 0 }) end,
-    { desc = "Diagnostics current buffer" })
+  { desc = "Diagnostics current buffer" })
 
 -- local floating_win = -1
 -- local floating_height = 50
@@ -131,17 +131,17 @@ keymap.set("n", '<leader>fd', function() require('telescope.builtin').diagnostic
 -- end
 
 local wrapper = function(_)
-    local lookup = {
-        ["t"] = "tab",
-        ["s"] = "split",
-        ["v"] = "vsplit",
-    }
-    local opts = { reuse_win = false }
-    local user_input = vim.fn.input("[tab, split, vsplit]: ")
-    if user_input ~= "" then
-        opts.jump_type = lookup[user_input]
-    end
-    return require('telescope.builtin').lsp_definitions(opts)
+  local lookup = {
+    ["t"] = "tab",
+    ["s"] = "split",
+    ["v"] = "vsplit",
+  }
+  local opts = { reuse_win = false }
+  local user_input = vim.fn.input("[tab, split, vsplit]: ")
+  if user_input ~= "" then
+    opts.jump_type = lookup[user_input]
+  end
+  return require('telescope.builtin').lsp_definitions(opts)
 end
 
 -- Floating window management
@@ -150,7 +150,7 @@ end
 -- keymap.set('n', '<leader>wo', wrapper_floating, {})
 
 local current_buffer = function(_)
-    vim.print(vim.fn.expand("%:p"))
+  vim.print(vim.fn.expand("%:p"))
 end
 keymap.set('n', '<leader>wp', current_buffer, {})
 
@@ -159,17 +159,17 @@ keymap.set('n', '<leader>rp', '<cmd>silent !~/script/rsync_push<CR>')
 keymap.set('n', '<leader>rg', '<cmd>silent !~/script/rsync_get<CR>')
 
 local accept_word = function()
-    require("copilot.suggestion").accept_word({})
-    require("copilot.suggestion").next({})
+  require("copilot.suggestion").accept_word({})
+  require("copilot.suggestion").next({})
 end
 
 local accept_line = function()
-    require("copilot.suggestion").accept_line({})
-    require("copilot.suggestion").next({})
+  require("copilot.suggestion").accept_line({})
+  require("copilot.suggestion").next({})
 end
 
 local clear_suggestion = function()
-    require("copilot.suggestion").dismiss({})
+  require("copilot.suggestion").dismiss({})
 end
 
 -- Copilot
@@ -210,34 +210,34 @@ keymap.set('i', '<C-Space>', '<cmd>lua vim.lsp.buf.completion()<CR>', { desc = "
 
 -- Filetype-specific keymaps (these can be done in the ftplugin directory instead if you prefer)
 keymap.set("n", '<leader>go', function()
-    if vim.bo.filetype == 'python' then
-        vim.api.nvim_command('PyrightOrganizeImports')
-    end
+  if vim.bo.filetype == 'python' then
+    vim.api.nvim_command('PyrightOrganizeImports')
+  end
 end)
 
 keymap.set("n", '<leader>tc', function()
-    if vim.bo.filetype == 'python' then
-        require('dap-python').test_class();
-    end
+  if vim.bo.filetype == 'python' then
+    require('dap-python').test_class();
+  end
 end)
 
 keymap.set("n", '<leader>tm', function()
-    if vim.bo.filetype == 'python' then
-        require('dap-python').test_method();
-    end
+  if vim.bo.filetype == 'python' then
+    require('dap-python').test_method();
+  end
 end)
 
 -- Quickfix stuff
 keymap.set("n", "<leader>qa", function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local lnum = vim.fn.line(".")
-    local col = vim.fn.col(".")
-    local text = vim.api.nvim_get_current_line()
-    vim.fn.setqflist({ { bufnr = bufnr, lnum = lnum, col = col, text = text } }, "a")
+  local bufnr = vim.api.nvim_get_current_buf()
+  local lnum = vim.fn.line(".")
+  local col = vim.fn.col(".")
+  local text = vim.api.nvim_get_current_line()
+  vim.fn.setqflist({ { bufnr = bufnr, lnum = lnum, col = col, text = text } }, "a")
 end)
 
 keymap.set("n", "<leader>qs", function()
-    vim.fn.setqflist({})
+  vim.fn.setqflist({})
 end)
 
 -- Add all diagnostics from the current buffer to quickfix list
@@ -256,18 +256,18 @@ keymap.set("n", "<leader>dj", "<cmd>lua require'dap'.step_over()<cr>")
 keymap.set("n", "<leader>dk", "<cmd>lua require'dap'.step_into()<cr>")
 keymap.set("n", "<leader>do", "<cmd>lua require'dap'.step_out()<cr>")
 keymap.set("n", '<leader>dd', function()
-    require('dap').disconnect(); require('dapui').close();
+  require('dap').disconnect(); require('dapui').close();
 end)
 keymap.set("n", '<leader>dt', function()
-    require('dap').terminate(); require('dapui').close();
+  require('dap').terminate(); require('dapui').close();
 end)
 keymap.set("n", "<leader>dr", "<cmd>lua require'dap'.repl.toggle()<cr>")
 keymap.set("n", "<leader>dl", "<cmd>lua require'dap'.run_last()<cr>")
 keymap.set("n", '<leader>di', function() require "dap.ui.widgets".hover() end)
 keymap.set("n", '<leader>d?',
-    function()
-        local widgets = require "dap.ui.widgets"; widgets.centered_float(widgets.scopes)
-    end)
+  function()
+    local widgets = require "dap.ui.widgets"; widgets.centered_float(widgets.scopes)
+  end)
 keymap.set("n", '<leader>df', '<cmd>Telescope dap frames<cr>')
 keymap.set("n", '<leader>dh', '<cmd>Telescope dap commands<cr>')
 -- keymap.set("n", '<leader>de',
