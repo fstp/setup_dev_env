@@ -41,6 +41,13 @@ keymap.set("n", "<leader>pt", require("overlook.api").open_in_tab, { desc = "Ope
 keymap.set("n", "<leader>po", require("overlook.api").open_in_original_window, { desc = "Open popup in current window" })
 keymap.set("n", "<leader>pf", require("overlook.api").switch_focus, { desc = "Switch focus between popup/main window" })
 
+-- MiniHarp
+keymap.set('n', '<leader>mm', require('miniharp').toggle_file, { desc = 'miniharp: toggle file mark' })
+keymap.set('n', '<leader>mc', require('miniharp').clear, { desc = 'miniharp: clear marks' })
+keymap.set('n', '<leader>ml', require('miniharp').show_list, { desc = 'miniharp: list marks' })
+keymap.set('n', '<M-n>', require('miniharp').next, { desc = 'miniharp: next file mark' })
+keymap.set('n', '<M-p>', require('miniharp').prev, { desc = 'miniharp: prev file mark' })
+
 -- Diff keymaps
 -- keymap.set("n", "<leader>cc", ":diffput<CR>") -- put diff from current to other during diff
 -- keymap.set("n", "<leader>cj", ":diffget 1<CR>") -- get diff from left (local) during merge
