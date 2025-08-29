@@ -73,8 +73,7 @@ keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>") -- find file in file expl
 
 -- Telescope
 keymap.set('n', '<leader>fp', ":Telescope projects<CR>", { desc = "Find projects" })
-keymap.set('n', '<leader>ff', function(_) require('telescope.builtin').find_files { hidden = true } end,
-  { desc = "Find files" })
+keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = "Find files" })
 keymap.set('n', '<leader>fl', require('telescope.builtin').oldfiles, { desc = "Find recently opened files" })
 
 -- keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, {})

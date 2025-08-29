@@ -31,13 +31,24 @@ return {
             width = 0.75
           }
         },
+        vimgrep_arguments = {
+          "rg",
+          "--color=never",
+          "--no-heading",
+          "--with-filename",
+          "--line-number",
+          "--column",
+          "--smart-case",
+          "--hidden",
+          "--glob", "!**/.git/*",
+        }
       },
       pickers = {
-        -- find_files = {
-        --   theme = "ivy"
-        -- },
+        find_files = {
+          hidden = true,
+          find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+        },
         buffers = {
-          -- theme = "ivy",
           sort_mru = true,
         },
         -- help_tags = {
@@ -87,6 +98,7 @@ return {
         ["<C-a>"] = actions.cycle_previewers_prev,
         ["<M-q>"] = "smart_send_to_qflist",
         ["<M-a>"] = "smart_add_to_qflist",
+        ["ii"] = actions.close,
       },
       i = {
         ["<esc>"] = actions.close,
@@ -95,7 +107,6 @@ return {
     }
     opts.extensions = {
       live_grep_args = {
-        -- theme = "ivy",
         debounce = 100,
         auto_quoting = false,
         mappings = {
@@ -103,7 +114,7 @@ return {
             ["<C-k>"] = lga_actions.quote_prompt(),
             ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
           }
-        }
+        },
       },
       fzf = {}
     }
