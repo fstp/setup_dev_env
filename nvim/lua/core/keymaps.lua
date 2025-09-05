@@ -45,6 +45,7 @@ keymap.set("n", "<leader>pf", require("overlook.api").switch_focus, { desc = "Sw
 keymap.set('n', '<leader>mm', require('miniharp').toggle_file, { desc = 'miniharp: toggle file mark' })
 keymap.set('n', '<leader>mc', require('miniharp').clear, { desc = 'miniharp: clear marks' })
 keymap.set('n', '<leader>ml', require('miniharp').show_list, { desc = 'miniharp: list marks' })
+keymap.set('n', '<leader>ms', require('miniharp').save, { desc = 'miniharp: save marks' })
 keymap.set('n', '<M-n>', require('miniharp').next, { desc = 'miniharp: next file mark' })
 keymap.set('n', '<M-p>', require('miniharp').prev, { desc = 'miniharp: prev file mark' })
 
