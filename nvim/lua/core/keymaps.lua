@@ -190,9 +190,11 @@ keymap.set('v', '<leader>cd', '<cmd>CopilotChatDocs<CR>', { desc = "Generate doc
 keymap.set('n', '<leader>cc', '<cmd>CopilotChatToggle<CR>', { desc = "Toggle Copilot Chat" })
 
 keymap.set('n', '<leader>cf', function()
-  require("CopilotChat").ask("#diagnostics Fix the errors and warnings please", {
-    selection = require("CopilotChat.select").buffer,
-  })
+  require("CopilotChat").ask(
+  "#diagnostics\n#buffer\nThere is a problem in this code. Identify the issues and rewrite the code with fixes. Explain what was wrong and how your changes address the problems.",
+    {
+      selection = require("CopilotChat.select").buffer,
+    })
 end, { desc = "Fix buffer" })
 
 -- LSP
