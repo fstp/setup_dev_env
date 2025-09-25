@@ -18,6 +18,12 @@
         state: directory
         mode: "0755"
 
+    - name: "Create user .config directory"
+      ansible.builtin.file:
+        path: "{{ home }}/.config"
+        state: directory
+        mode: "0755"
+
     - name: "Softlink the Ansible bashrc file into home"
       ansible.builtin.file:
         src: "{{ playbook_dir }}/.bashrc.ansible"
@@ -26,15 +32,10 @@
         access_time: preserve
         modification_time: preserve
 
-    # - name: "Upload Ansible bashrc file"
-    #   ansible.builtin.copy:
-    #     src: "{{ playbook_dir }}/.bashrc.ansible"
-    #     dest: "{{ home }}/.bashrc.ansible"
-
     - name: "Add Ansible to the regular bashrc file"
       ansible.builtin.lineinfile:
         path: "{{ home }}/.bashrc"
-        insertbefore: "BOF"
+        insertbefore: "EOF"
         line: source ~/.bashrc.ansible
 
     - name: Install ASDF dependencies
@@ -75,13 +76,6 @@
       args:
         executable: /usr/bin/bash
       changed_when: true
-
-    # - name: "Clone ASDF repo"
-    #   ansible.builtin.git:
-    #     repo: https://github.com/asdf-vm/asdf.git
-    #     dest: "{{ home }}/.asdf"
-    #     version: master
-    #     update: false
 
     - name: "Install Python package manager (uv)"
       ansible.builtin.shell: |
@@ -174,7 +168,6 @@
       ansible.builtin.apt:
         pkg:
           - jq
-          - sq
 
     # Database manipulation tool
     - name: Install sq
@@ -281,19 +274,6 @@
         target: install
       changed_when: false
 
-    # - name: "Clone the automation repo"
-    #   ansible.builtin.git:
-    #     repo: https://github.com/fstp/setup_dev_env.git
-    #     dest: "{{ home }}/setup_dev_env"
-    #     version: main
-    #     update: false
-
-    - name: "Create .config directory"
-      ansible.builtin.file:
-        path: "{{ home }}/.config"
-        state: directory
-        mode: "0644"
-
     - name: "Softlink the Neovim configuration into home"
       ansible.builtin.file:
         src: "{{ playbook_dir }}/nvim"
@@ -306,7 +286,7 @@
       ansible.builtin.file:
         path: "{{ home }}/.config/pip"
         state: directory
-        mode: "0644"
+        mode: "0755"
 
     - name: "Create global pip config file"
       ansible.builtin.file:
@@ -314,7 +294,7 @@
         state: touch
         access_time: preserve
         modification_time: preserve
-        mode: "0644"
+        mode: "0755"
 
     - name: "Add some pip configuration to allow installing global packages"
       ansible.builtin.blockinfile:
@@ -327,6 +307,7 @@
       ansible.builtin.pip:
         name: neovim
         state: present
+        extra_args: --break-system-packages
 
     - name: "Install ripgrep, fzf and tmux"
       become: true
