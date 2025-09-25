@@ -16,7 +16,7 @@
       ansible.builtin.file:
         path: "{{ bin_dir }}"
         state: directory
-        mode: '0755'
+        mode: "0755"
 
     - name: "Softlink the Ansible bashrc file into home"
       ansible.builtin.file:
@@ -58,15 +58,15 @@
 
     - name: "Download ASDF release"
       ansible.builtin.get_url:
-       url: https://github.com/asdf-vm/asdf/releases/download/v0.16.7/asdf-v0.16.7-linux-amd64.tar.gz
-       dest: "{{ home }}/asdf.tar.gz"
-       mode: '0644'
+        url: https://github.com/asdf-vm/asdf/releases/download/v0.16.7/asdf-v0.16.7-linux-amd64.tar.gz
+        dest: "{{ home }}/asdf.tar.gz"
+        mode: "0644"
 
     - name: "Extract ASDF release"
       ansible.builtin.unarchive:
-       src: "{{ home }}/asdf.tar.gz"
-       dest: "{{ bin_dir }}"
-       remote_src: yes
+        src: "{{ home }}/asdf.tar.gz"
+        dest: "{{ bin_dir }}"
+        remote_src: true
 
     - name: "Regenerate ASDF shims"
       ansible.builtin.shell: |
@@ -74,6 +74,7 @@
         asdf reshim
       args:
         executable: /usr/bin/bash
+      changed_when: true
 
     # - name: "Clone ASDF repo"
     #   ansible.builtin.git:
@@ -150,11 +151,13 @@
         asdf reshim rust
       args:
         executable: /usr/bin/bash
+      changed_when: true
 
     - name: "[Rust] Install custom Television channels"
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/custom-channels.toml"
         dest: "{{ home }}/.config/television/custom-channels.toml"
+        mode: "0644"
 
     - name: "[Rust] Install Zoxide for easy searching"
       ansible.builtin.shell: |
@@ -163,6 +166,22 @@
         asdf reshim rust
       args:
         executable: /usr/bin/bash
+      changed_when: true
+
+    # JSON manipulation tool
+    - name: Install jq
+      become: true
+      ansible.builtin.apt:
+        pkg:
+          - jq
+          - sq
+
+    # Database manipulation tool
+    - name: Install sq
+      become: true
+      ansible.builtin.shell: /bin/sh -c "$(curl -fsSL https://sq.io/install.sh)"
+      changed_when: true
+
 
     - name: "[Rust] Install htmlq, parse HTML like jq for JSON"
       ansible.builtin.shell: |
@@ -171,6 +190,16 @@
         asdf reshim rust
       args:
         executable: /usr/bin/bash
+      changed_when: true
+
+    - name: "[Rust] Install ast-grep, grep on syntax pattern (using tree-sitter)"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        cargo install --locked ast-grep
+        asdf reshim rust
+      args:
+        executable: /usr/bin/bash
+      changed_when: true
 
     - name: "Install latest NodeJS using ASDF"
       ansible.builtin.shell: |
@@ -216,7 +245,7 @@
           # Neovim python plugins
           - fd-find # venv-select
           - black
-          #- python3-debugpy
+          # - python3-debugpy
           - flake8
           - isort
           - mypy
@@ -263,6 +292,7 @@
       ansible.builtin.file:
         path: "{{ home }}/.config"
         state: directory
+        mode: "0644"
 
     - name: "Softlink the Neovim configuration into home"
       ansible.builtin.file:
@@ -276,6 +306,7 @@
       ansible.builtin.file:
         path: "{{ home }}/.config/pip"
         state: directory
+        mode: "0644"
 
     - name: "Create global pip config file"
       ansible.builtin.file:
@@ -283,6 +314,7 @@
         state: touch
         access_time: preserve
         modification_time: preserve
+        mode: "0644"
 
     - name: "Add some pip configuration to allow installing global packages"
       ansible.builtin.blockinfile:
