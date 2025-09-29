@@ -360,3 +360,9 @@
       args:
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/lua"
+
+    - name: "Install moreutils which includes 'vipe', it can be used to edit pipelines"
+      become: true
+      ansible.builtin.apt:
+        pkg:
+          - moreutils
