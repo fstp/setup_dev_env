@@ -78,7 +78,12 @@ keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = 
 keymap.set('n', '<leader>fl', require('telescope.builtin').oldfiles, { desc = "Find recently opened files" })
 
 -- keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, {})
-keymap.set('n', '<leader>fg', require('telescope').extensions.live_grep_args.live_grep_args, { desc = "Grep" })
+keymap.set('n', '<leader>fgg', require('telescope').extensions.live_grep_args.live_grep_args,
+  { desc = "Grep entire project" })
+
+keymap.set('n', '<leader>fgb', function()
+  require('telescope.builtin').live_grep({ grep_open_files = true })
+end, { desc = "Grep open buffers" })
 
 keymap.set('n', '<leader>fb', require('telescope.builtin').buffers, { desc = "Find buffers" })
 keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = "Search help" })
