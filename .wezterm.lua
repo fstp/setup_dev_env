@@ -29,7 +29,8 @@ config.max_fps = 120
 
 -- For example, changing the color scheme:
 --config.color_scheme = 'Adventure'
-config.color_scheme = 'Adventure Time (Gogh)'
+-- config.color_scheme = 'Adventure Time (Gogh)'
+config.color_scheme = '3024 (dark) (terminal.sexy)'
 
 -- and finally, return the configuration to wezterm
 return config
