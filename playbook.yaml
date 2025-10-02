@@ -147,11 +147,13 @@
         executable: /usr/bin/bash
       changed_when: true
 
-    - name: "[Rust] Install custom Television channels"
-      ansible.builtin.copy:
-        src: "{{ playbook_dir }}/custom-channels.toml"
-        dest: "{{ home }}/.config/television/custom-channels.toml"
-        mode: "0644"
+    - name: "[Rust] Softlink the Television config"
+      ansible.builtin.file:
+        src: "{{ playbook_dir }}/config.toml"
+        dest: "{{ home }}/.config/television/config.toml"
+        state: link
+        access_time: preserve
+        modification_time: preserve
 
     - name: "[Rust] Install Zoxide for easy searching"
       ansible.builtin.shell: |
