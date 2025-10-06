@@ -77,7 +77,7 @@
         executable: /usr/bin/bash
       changed_when: true
 
-    - name: "Install Python package manager (uv)"
+    - name: "Install the Python package manager called UV"
       ansible.builtin.shell: |
         . ~/.bashrc
         asdf plugin add uv
@@ -86,6 +86,23 @@
       args:
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/uv"
+
+    - name: "Get the UV tool directory"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        uv tool dir
+      args:
+        executable: /usr/bin/bash
+      register: uv_tool_dir
+      changed_when: true
+
+    - name: "Install httpx, curl replacement"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        uv tool install httpx[cli] --force
+      args:
+        executable: /usr/bin/bash
+        creates: "{{ uv_tool_dir.stdout }}/httpx"
 
     - name: "Install latest Erlang using ASDF"
       ansible.builtin.shell: |
