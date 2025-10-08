@@ -89,10 +89,6 @@ return {
     local actions = require("telescope.actions")
     local lga_actions = require("telescope-live-grep-args.actions")
 
-    telescope.load_extension("fzf")
-    telescope.load_extension("ui-select")
-    telescope.load_extension("zoxide")
-
     opts.defaults.mappings = {
       n = {
         ["<C-s>"] = actions.cycle_previewers_next,
@@ -107,6 +103,18 @@ return {
       }
     }
     opts.extensions = {
+      zoxide = {
+        mappings = {
+          default = {
+            action = function(selection)
+              vim.cmd.lcd(selection.path)
+            end,
+            after_action = function(selection)
+              vim.notify("Directory changed to " .. selection.path)
+            end,
+          }
+        }
+      },
       live_grep_args = {
         debounce = 100,
         auto_quoting = false,
@@ -119,6 +127,11 @@ return {
       },
       fzf = {}
     }
+
     telescope.setup(opts)
+
+    telescope.load_extension("zoxide")
+    telescope.load_extension("fzf")
+    telescope.load_extension("ui-select")
   end
 }

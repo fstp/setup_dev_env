@@ -74,6 +74,7 @@ keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>") -- find file in file expl
 
 -- Telescope
 keymap.set('n', '<leader>fp', ":Telescope projects<CR>", { desc = "Find projects" })
+keymap.set('n', '<leader>fz', ":Telescope zoxide list<CR>", { desc = "Zoxide: Find folders" })
 keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = "Find files" })
 keymap.set('n', '<leader>fl', require('telescope.builtin').oldfiles, { desc = "Find recently opened files" })
 
