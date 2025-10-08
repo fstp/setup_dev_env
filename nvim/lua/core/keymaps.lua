@@ -23,10 +23,10 @@ keymap.set("n", "<C-j>", "<C-w>j")
 keymap.set("n", "<C-k>", "<C-w>k")
 
 -- Tab management
-keymap.set("n", "<leader>to", ":tabnew<CR>")   -- open a new tab
-keymap.set("n", "<leader>tx", ":tabclose<CR>") -- close a tab
-keymap.set("n", "<leader>tn", ":tabn<CR>")     -- next tab
-keymap.set("n", "<leader>tp", ":tabp<CR>")     -- previous tab
+keymap.set("n", "<leader>to", ":tab split<CR>") -- open a new tab
+keymap.set("n", "<leader>tx", ":tabclose<CR>")  -- close a tab
+keymap.set("n", "<leader>tn", ":tabn<CR>")      -- next tab
+keymap.set("n", "<leader>tp", ":tabp<CR>")      -- previous tab
 keymap.set('n', '<leader>tf', require('telescope-tabs').list_tabs, { desc = "List and search tabs" })
 
 -- Overlook popup bindings
@@ -144,14 +144,15 @@ keymap.set("n", '<leader>fd', function() require('telescope.builtin').diagnostic
 
 local wrapper = function(_)
   local lookup = {
-    ["t"] = "tab",
+    ["t"] = "tab split",
     ["s"] = "split",
     ["v"] = "vsplit",
   }
   local opts = { reuse_win = false }
   local user_input = vim.fn.input("[tab, split, vsplit]: ")
   if user_input ~= "" then
-    opts.jump_type = lookup[user_input]
+    vim.cmd(lookup[user_input])
+    -- opts.jump_type = lookup[user_input]
   end
   return require('telescope.builtin').lsp_definitions(opts)
 end
