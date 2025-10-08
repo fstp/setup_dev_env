@@ -47,17 +47,15 @@ return {
         find_files = {
           hidden = true,
           find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+          push_tagstack_on_edit = true,
         },
         buffers = {
           sort_mru = true,
         },
+        lsp_document_symbols = {
+          theme = "ivy",
+        },
         -- help_tags = {
-        --   theme = "ivy",
-        -- },
-        -- current_buffer_fuzz_find = {
-        --   theme = "ivy",
-        -- },
-        -- lsp_document_symbols = {
         --   theme = "ivy",
         -- },
         -- jumplist = {
@@ -72,12 +70,12 @@ return {
         -- quickfix = {
         --   theme = "ivy",
         -- },
-        -- oldfiles = {
-        --   theme = "ivy",
-        -- },
-        -- lsp_references = {
-        --   theme = "ivy",
-        -- },
+        oldfiles = {
+          sort_mru = true,
+        },
+        lsp_references = {
+          push_tagstack_on_edit = true,
+        },
         -- current_buffer_fuzzy_find = {
         --   theme = "ivy",
         -- },
