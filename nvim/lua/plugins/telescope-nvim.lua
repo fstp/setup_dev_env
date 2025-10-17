@@ -26,9 +26,10 @@ return {
   opts = function()
     return {
       defaults = {
+        layout_strategy = "vertical",
         layout_config = {
           vertical = {
-            width = 0.75
+            width = 0.85
           }
         },
         vimgrep_arguments = {

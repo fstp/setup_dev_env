@@ -17,6 +17,8 @@ keymap.set("v", "ii", "<ESC>")                 -- exit visual mode with ii
 keymap.set("n", "gx", ":!open <c-r><c-a><CR>") -- open URL under cursor
 keymap.set("n", "<leader>o", "o<ESC>")         -- newline in normal mode
 
+keymap.set("n", "<localleader>r", ":noh<CR>")
+
 -- Window movement
 keymap.set("n", "<C-l>", "<C-w>l")
 keymap.set("n", "<C-h>", "<C-w>h")
