@@ -87,22 +87,15 @@
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/uv"
 
-    - name: "Get the UV tool directory"
+    - name: "Install llm, ttok and strip-tags, https://simonwillison.net/2023/May/18/cli-tools-for-llms/"
       ansible.builtin.shell: |
         . ~/.bashrc
-        uv tool dir
+        uv tool install llm --force
+        uv tool install ttok --force
+        uv tool install strip-tags --force
       args:
         executable: /usr/bin/bash
-      register: uv_tool_dir
       changed_when: true
-
-    - name: "Install httpx, curl replacement"
-      ansible.builtin.shell: |
-        . ~/.bashrc
-        uv tool install httpx[cli] --force
-      args:
-        executable: /usr/bin/bash
-        creates: "{{ uv_tool_dir.stdout }}/httpx"
 
     - name: "Install latest Erlang using ASDF"
       ansible.builtin.shell: |
@@ -187,6 +180,13 @@
       ansible.builtin.apt:
         pkg:
           - jq
+
+    # YAML, XML manipulation tool
+    - name: Install yq
+      ansible.builtin.get_url:
+        url: https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+        dest: "{{ bin_dir }}/yq"
+        mode: '0755'
 
     # Database manipulation tool
     - name: Install sq
