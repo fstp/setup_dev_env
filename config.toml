@@ -158,9 +158,9 @@ ctrl-s = "cycle_sources"
 # ----------
 ctrl-t = "toggle_remote_control"
 ctrl-o = "toggle_preview"
-ctrl-h = "toggle_help"
+ctrl-f = "toggle_help"
 f12 = "toggle_status_bar"
-ctrl-l = "toggle_layout"
+ctrl-b = "toggle_layout"
 
 # Input field actions
 # ----------------------------------------
