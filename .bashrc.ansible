@@ -1,9 +1,6 @@
 #!/usr/bin/bash
 # vi:set ft=sh
 
-# append to the history file, don't overwrite it
-shopt -s histappend
-
 export VISUAL=nvim
 export EDITOR=${VISUAL}
 
@@ -15,7 +12,20 @@ export PATH="$ASDF_DATA_DIR/shims:$PATH"
 # . "$HOME/.asdf/completions/asdf.bash"
 
 source /usr/share/doc/fzf/examples/key-bindings.bash || true
-export HISTCONTROL=ignoreboth:erasedups
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1_000_000
+HISTFILESIZE=1_000_000
+
+# Avoid duplicates
+HISTCONTROL=ignoredups:erasedups
+
+# When the shell exits, append to the history file instead of overwriting it
+shopt -s histappend
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
 
 export FZF_DEFAULT_OPTS="--bind \
 ctrl-y:preview-up,ctrl-e:preview-down,\
@@ -23,18 +33,33 @@ ctrl-b:preview-page-up,ctrl-f:preview-page-down,\
 ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down\
  --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 
+# CTRL-Y to copy the command into clipboard using pbcopy
+export FZF_CTRL_R_OPTS=" \
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort' \
+  --color header:italic \
+  --preview-window=:hidden \
+  --height 60% \
+  --header 'Press CTRL-Y to copy command into clipboard'"
+
+export FZF_ALT_C_COMMAND="fd --type d --hidden --no-ignore-vcs --exclude .git --exclude node_modules --exclude target"
+export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
+
+#ctrl-o:change-preview-window(down|hidden|)
+
 # 1. Search for text in files using Ripgrep
 # 2. Interactively narrow down the list using fzf
 # 3. Open the file in Vim
 rfv() {
-  rg --color=always --line-number --no-heading --smart-case "${@:-}" |
+  rg --color=always --colors="match:fg:magenta" --line-number --hidden --no-heading --smart-case "${@:-}" |
     fzf --ansi \
-    --color "hl:-1:underline,hl+:-1:underline:reverse" \
+    --color "dark" \
     --delimiter : \
     --preview 'bat --color=always {1} --highlight-line {2}' \
     --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
     --bind 'enter:execute(nvim {1} +{2})'
 }
+
+# --color "dark,hl:-1:underline,hl+:-1:underline:reverse" \
 
 eval "$(zoxide init bash)"
 
@@ -69,6 +94,9 @@ alias fdr='fd -I -H --regex'
 # Shortcuts for virtualenv
 alias ac='source venv/bin/activate'
 alias dc='deactivate'
+
+# LLM shortcuts
+alias llm='llm -m gemini-flash-latest'
 
 # OpenMP env variables for BLIS (https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/BLIS.md)
 export OMP_PROC_BIND=close
