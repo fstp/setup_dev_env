@@ -32,7 +32,8 @@ ctrl-y:preview-up,ctrl-e:preview-down,\
 ctrl-b:preview-page-up,ctrl-f:preview-page-down,\
 ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down,\
 ctrl-o:toggle-preview\
- --preview 'if [ -d "{}" ]; then tree -C "{}"; else bat --style=numbers --color=always --line-range :500 "{}"; fi'"
+ --preview 'if [ -d "{}" ]; then tree -C "{}"; else bat --style=numbers --color=always --line-range :500 "{}"; fi'\
+ -m"
 
 # CTRL-Y to copy the command into clipboard using pbcopy
 export FZF_CTRL_R_OPTS=" \
