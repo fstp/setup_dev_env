@@ -277,7 +277,7 @@
         repo: https://github.com/neovim/neovim.git
         dest: "{{ home }}/nvim"
         version: master
-        update: false
+        force: true
 
     - name: "Build Neovim"
       community.general.make:
