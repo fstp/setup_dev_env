@@ -70,10 +70,10 @@ ffv() {
 }
 
 glf() {
-  local arg="${1:-}"
-  git log --oneline --decorate --color=always ${arg} | \
+  git log --oneline --decorate --color=always --no-merges "$@" | \
     fzf -m --ansi --color=dark --no-sort \
     --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always' \
+    --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
     --bind 'enter:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always)'
 }
 
