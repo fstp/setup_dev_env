@@ -46,8 +46,6 @@ export FZF_CTRL_R_OPTS=" \
 export FZF_ALT_C_COMMAND="fd --type d --hidden --no-ignore-vcs --exclude .git --exclude node_modules --exclude target"
 export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
 
-#ctrl-o:change-preview-window(down|hidden|)
-
 # 1. Search for text in files using Ripgrep
 # 2. Interactively narrow down the list using fzf
 # 3. Open the file in Vim
@@ -71,7 +69,13 @@ ffv() {
     --bind 'enter:execute(nvim {1})'
 }
 
-# --color "dark,hl:-1:underline,hl+:-1:underline:reverse" \
+glf() {
+  local arg="${1:-}"
+  git log --oneline --decorate --color=always ${arg} | \
+    fzf -m --ansi --color=dark --no-sort \
+    --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always' \
+    --bind 'enter:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always)'
+}
 
 eval "$(zoxide init bash)"
 
