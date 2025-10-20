@@ -61,6 +61,16 @@ rfv() {
     --bind 'enter:execute(nvim {1} +{2})'
 }
 
+ffv() {
+  fd --type f --hidden --no-ignore-vcs --exclude .git --exclude node_modules --exclude target |
+    fzf --ansi \
+    --color "dark" \
+    --delimiter : \
+    --preview 'bat -p --color=always {1}' \
+    --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
+    --bind 'enter:execute(nvim {1})'
+}
+
 # --color "dark,hl:-1:underline,hl+:-1:underline:reverse" \
 
 eval "$(zoxide init bash)"
