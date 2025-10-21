@@ -74,7 +74,7 @@ glf() {
     fzf -m --ansi --color=dark --no-sort \
     --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always' \
     --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
-    --bind 'enter:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always)'
+    --bind 'enter:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always | bat --paging=always)'
 }
 
 eval "$(zoxide init bash)"
