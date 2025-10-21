@@ -32,6 +32,14 @@
         access_time: preserve
         modification_time: preserve
 
+    - name: "Softlink the decolor utility script into bin"
+      ansible.builtin.file:
+        src: "{{ playbook_dir }}/decolor"
+        dest: "{{ home }}/bin/decolor"
+        state: link
+        access_time: preserve
+        modification_time: preserve
+
     - name: "Add Ansible to the regular bashrc file"
       ansible.builtin.lineinfile:
         path: "{{ home }}/.bashrc"
