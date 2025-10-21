@@ -350,6 +350,13 @@
         access_time: preserve
         modification_time: preserve
 
+    # C-p C-t to pick any file from Zoxide into cursor position
+    - name: "Install tmux-file-picker utility"
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/raine/tmux-file-picker/main/tmux-file-picker
+        dest: "{{ home }}/bin/tmux-file-picker"
+        mode: '0755'
+
     - name: "Softlink tmux configuration into home"
       ansible.builtin.file:
         src: "{{ playbook_dir }}/.tmux.conf"
