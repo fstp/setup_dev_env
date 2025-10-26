@@ -1,0 +1,29 @@
+#! /usr/bin/env bash
+# vim: ft=sh
+set -eu
+set -o pipefail
+
+temp="$(mktemp)"
+trap 'rm "$temp"' EXIT
+
+curl -sL https://www.svt.se/rss.xml | \
+  yq -p xml -o json | \
+  jq -c '.rss.channel.item[] | {source: "SVT", title, link, date: .pubDate, description}' >> "$temp"
+
+curl -sL https://rss.aftonbladet.se/rss2/small/pages/sections/senastenytt | \
+  yq -p xml -o json | \
+  jq '.rss.channel.item[] | {source: "Aftonbladet", title, link, date: .pubDate, description}' >> "$temp"
+
+curl -sL https://www.svd.se/feed/articles.rss | \
+  yq -p xml -o json | \
+  jq '.rss.channel.item[] | {source: "SvD", link, date: .pubDate, title, description: (.description // "" | gsub("<p>|</p>"; ""))}' \
+  >> "$temp"
+
+jq . <"$temp" | bat -l json -p
+
+# curl -sG 'https://api.svt.se/newsqlear/graphql' \
+#   -d 'operationName=AutoFeedPaginationQuery' \
+#   -d 'variables={"cursor":"0","limit":100,"path":"/nyheter/utrikes/"}' \
+#   -d 'extensions={"persistedQuery":{"sha256Hash":"f391dbdd6f7690d41b21f3f6caec8c2ab1baa959cef9e5d4663431056407c0c5","version":1}}' \
+#   | jq '.data.page.feed.teasers[] | {headline, url: ("https://www.svt.se" + .url), text, alt_text: .image.altText} | with_entries(select(.value != null and .value != ""))' \
+#   | bat -l json -p

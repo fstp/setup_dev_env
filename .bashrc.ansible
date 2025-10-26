@@ -27,13 +27,15 @@ shopt -s histappend
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-export FZF_DEFAULT_OPTS="--bind \
+export FZF_DEFAULT_OPTS="--bind '\
 ctrl-y:preview-up,ctrl-e:preview-down,\
 ctrl-b:preview-page-up,ctrl-f:preview-page-down,\
 ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down,\
-ctrl-o:toggle-preview\
+ctrl-o:toggle-preview,\
+ctrl-v:execute(nvim {1})'\
  --preview 'if [ -d "{}" ]; then tree -C "{}"; else bat --style=numbers --color=always --line-range :500 "{}"; fi'\
- -m"
+ -m\
+ --ansi"
 
 # CTRL-Y to copy the command into clipboard using pbcopy
 export FZF_CTRL_R_OPTS=" \
@@ -108,11 +110,10 @@ alias fdg='fd -I -H -g'
 alias fdr='fd -I -H --regex'
 
 # Shortcuts for virtualenv
-alias ac='source venv/bin/activate'
+alias ac='source .venv/bin/activate'
 alias dc='deactivate'
 
-# LLM shortcuts
-alias llm='llm -m gemini-flash-latest'
+alias jless='jless -r'
 
 # OpenMP env variables for BLIS (https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/BLIS.md)
 export OMP_PROC_BIND=close

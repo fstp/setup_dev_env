@@ -189,6 +189,20 @@
         pkg:
           - jq
 
+    # Any text to JSON
+    - name: Install jc, tool to convert (pretty much) any input to JSON
+      become: true
+      ansible.builtin.apt:
+        pkg:
+          - jc
+
+    # XML manipulation tool
+    - name: Install xmlstarlet
+      become: true
+      ansible.builtin.apt:
+        pkg:
+          - xmlstarlet
+
     # YAML, XML manipulation tool
     - name: Install yq
       ansible.builtin.get_url:
@@ -202,6 +216,20 @@
       ansible.builtin.shell: /bin/sh -c "$(curl -fsSL https://sq.io/install.sh)"
       changed_when: true
 
+    - name: "[Rust] Install difftastic, syntax aware diff tool"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        cargo install --locked difftastic
+        asdf reshim rust
+      args:
+        executable: /usr/bin/bash
+      changed_when: true
+
+    - name: "Set difftastic as the default diff tool"
+      community.general.git_config:
+        name: diff.external
+        scope: global
+        value: difft
 
     - name: "[Rust] Install htmlq, parse HTML like jq for JSON"
       ansible.builtin.shell: |
@@ -216,6 +244,23 @@
       ansible.builtin.shell: |
         . ~/.bashrc
         cargo install --locked ast-grep
+        asdf reshim rust
+      args:
+        executable: /usr/bin/bash
+      changed_when: true
+
+    - name: "Install dependencies for jless"
+      become: true
+      ansible.builtin.apt:
+        pkg:
+          - libxcb-render0-dev
+          - libxcb-shape0-dev
+          - libxcb-xfixes0-dev
+
+    - name: "[Rust] Install jless, a special kind of less for JSON"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        cargo install --locked jless
         asdf reshim rust
       args:
         executable: /usr/bin/bash
