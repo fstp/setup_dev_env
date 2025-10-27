@@ -3,27 +3,56 @@
 set -eu
 set -o pipefail
 
+# Optional source filter argument
+source_filter="${1:-}"
+
 temp="$(mktemp)"
 trap 'rm "$temp"' EXIT
 
+{
 curl -sL https://www.svt.se/rss.xml | \
   yq -p xml -o json | \
-  jq -c '.rss.channel.item[] | {source: "SVT", title, link, date: .pubDate, description}' >> "$temp"
-
+  jq -c '.rss.channel.item[] | {
+    source: "SVT", 
+    title, 
+    link, 
+    date: (.pubDate | strptime("%a, %d %b %Y %H:%M:%S %z") | mktime), 
+    description
+  }' || echo "Failed to fetch SVT feed" >&2;
 curl -sL https://rss.aftonbladet.se/rss2/small/pages/sections/senastenytt | \
   yq -p xml -o json | \
-  jq '.rss.channel.item[] | {source: "Aftonbladet", title, link, date: .pubDate, description}' >> "$temp"
-
-curl -sL https://www.svd.se/feed/articles.rss | \
+  jq -c '.rss.channel.item[] | {
+    source: "Aftonbladet",
+    title,
+    link,
+    date: (.pubDate | strptime("%a, %d %b %Y %H:%M:%S GMT") | mktime),
+    description
+  }' || echo "Failed to fetch Aftonbladet feed" >&2;
+curl -sL https://www.tv4.se/rss | \
   yq -p xml -o json | \
-  jq '.rss.channel.item[] | {source: "SvD", link, date: .pubDate, title, description: (.description // "" | gsub("<p>|</p>"; ""))}' \
-  >> "$temp"
+  jq -c '.rss.channel.item[] | {
+    source: "TV4",
+    title,
+    link,
+    date: (.pubDate | strptime("%a, %d %b %Y %H:%M:%S GMT") | mktime),
+    description: (.description // "" | gsub("<p>|</p>"; ""))
+  }' || echo "Failed to fetch TV4 feed" >&2;
+# curl -sL https://www.svd.se/feed/articles.rss | \
+#   yq -p xml -o json | \
+#   jq -c '.rss.channel.item[] | {
+#     source: "SvD",
+#     title,
+#     link,
+#     date: (.pubDate | strptime("%a, %d %b %Y %H:%M:%S %z") | mktime),
+#     description: (.description // "" | gsub("<p>|</p>"; ""))
+#   }' || echo "Failed to fetch SvD feed" >&2;
+} >> "$temp"
 
-jq . <"$temp" | bat -l json -p
-
-# curl -sG 'https://api.svt.se/newsqlear/graphql' \
-#   -d 'operationName=AutoFeedPaginationQuery' \
-#   -d 'variables={"cursor":"0","limit":100,"path":"/nyheter/utrikes/"}' \
-#   -d 'extensions={"persistedQuery":{"sha256Hash":"f391dbdd6f7690d41b21f3f6caec8c2ab1baa959cef9e5d4663431056407c0c5","version":1}}' \
-#   | jq '.data.page.feed.teasers[] | {headline, url: ("https://www.svt.se" + .url), text, alt_text: .image.altText} | with_entries(select(.value != null and .value != ""))' \
-#   | bat -l json -p
+jq -s --arg source "$source_filter" \
+  'sort_by(.date) | reverse | 
+  if $source == "" then
+    .
+  else
+    map(select(.source | ascii_downcase == ($source | ascii_downcase)))
+  end |
+  .[].date |= strftime("%a, %d %b %Y %H:%M:%S %z") | .[]' <"$temp" | jless
