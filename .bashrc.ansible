@@ -113,8 +113,6 @@ alias fdr='fd -I -H --regex'
 alias ac='source .venv/bin/activate'
 alias dc='deactivate'
 
-alias jless='jless -r'
-
 # OpenMP env variables for BLIS (https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/BLIS.md)
 export OMP_PROC_BIND=close
 export OMP_PLACES=cores
