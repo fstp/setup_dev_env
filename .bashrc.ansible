@@ -27,6 +27,8 @@ shopt -s histappend
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
+alias pbcopy='xclip -selection clipboard'
+
 export FZF_DEFAULT_OPTS="--bind '\
 ctrl-y:preview-up,ctrl-e:preview-down,\
 ctrl-b:preview-page-up,ctrl-f:preview-page-down,\
@@ -51,32 +53,116 @@ export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
 # 1. Search for text in files using Ripgrep
 # 2. Interactively narrow down the list using fzf
 # 3. Open the file in Vim
-rfv() {
-  rg --color=always --colors="match:fg:magenta" --line-number --hidden --no-heading --smart-case "${@:-}" |
+fzf-rg() {
+  rg --follow --color=always --colors="match:fg:magenta" --line-number --hidden --no-heading --smart-case "${@:-}" |
     fzf --ansi \
-    --color "dark" \
+    --color=dark \
     --delimiter : \
     --preview 'bat --color=always {1} --highlight-line {2}' \
     --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
     --bind 'enter:execute(nvim {1} +{2})'
 }
 
-ffv() {
-  fd --type f --hidden --no-ignore-vcs --exclude .git --exclude node_modules --exclude target |
+fzf-fd() {
+  fd --follow --type f --hidden --no-ignore-vcs --exclude .git --exclude node_modules --exclude target "${@:-}" |
     fzf --ansi \
-    --color "dark" \
+    --color=dark \
     --delimiter : \
     --preview 'bat -p --color=always {1}' \
     --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
     --bind 'enter:execute(nvim {1})'
 }
 
-glf() {
+fzf-gl() {
   git log --oneline --decorate --color=always --no-merges "$@" | \
     fzf -m --ansi --color=dark --no-sort \
     --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always' \
     --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
     --bind 'enter:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always | bat -p --paging=always)'
+}
+
+# fzf-awk: Interactively preview an awk script on stdin
+#
+# Usage:
+#   cat data.txt | fzf-awk
+#   ls -l | fzf-awk
+#
+fzf-awk() {
+  # 1. Create a temporary file to cache stdin
+  local tmpfile
+  tmpfile=$(mktemp) || { echo "Failed to create temp file" >&2; return 1; }
+
+  # 2. Set a trap to ensure the temp file is deleted on exit
+  #    (even if you press Ctrl+C)
+  trap 'rm -f "$tmpfile"' EXIT INT TERM
+
+  # 3. Read all of stdin and save it to the temp file
+  cat > "$tmpfile"
+
+  # 4. Run fzf
+  #    We don't pipe any list into fzf; it starts empty.
+  #    --print-query: When you press Enter, fzf will print your awk script.
+  #    --preview: This is the core logic.
+  fzf --bind "ctrl-e:execute(cat \"$tmpfile\" | eval awk {q} 2>&1 | bat -p --paging=always),\
+ctrl-y:execute(echo -n {q} | xclip -selection clipboard),\
+enter:execute(cat \"$tmpfile\" | eval awk {q} 2>&1)+abort" \
+      --header 'Press CTRL-Y to copy query into clipboard, CTRL-E to preview output' \
+      --ansi \
+      --color=dark \
+      --preview-window 'up,95%,border-bottom,+{2}+3/3,~3' \
+      --preview="
+        # Only run if the query {q} is not empty
+        if [ -n \"{q}\" ]; then
+          # Run awk with the query {q} on the cached stdin data
+          # 2>&1 redirects stderr, so you see syntax errors in the preview
+          cat \"$tmpfile\" | eval awk {q} 2>&1;
+        else
+          # Show a prompt if the query is empty
+          echo 'Type your awk script... (e.g., '\''{print \$1}'\'')';
+        fi
+      "
+}
+
+# fzf-jq: Interactively preview a jq script on stdin
+#
+# Usage:
+#   cat data.txt | fzf-awk
+#   ls -l | fzf-awk
+#
+fzf-jq() {
+  # 1. Create a temporary file to cache stdin
+  local tmpfile
+  tmpfile=$(mktemp) || { echo "Failed to create temp file" >&2; return 1; }
+
+  # 2. Set a trap to ensure the temp file is deleted on exit
+  #    (even if you press Ctrl+C)
+  trap 'rm -f "$tmpfile"' EXIT INT TERM
+
+  # 3. Read all of stdin and save it to the temp file
+  cat > "$tmpfile"
+
+  # 4. Run fzf
+  #    We don't pipe any list into fzf; it starts empty.
+  #    --print-query: When you press Enter, fzf will print your awk script.
+  #    --preview: This is the core logic.
+  fzf --bind "ctrl-e:execute(cat \"$tmpfile\" | eval jq {q} 2>&1 | jless),\
+ctrl-y:execute(echo -n {q} | xclip -selection clipboard),\
+enter:execute(cat \"$tmpfile\" | eval jq {q} 2>&1)+abort" \
+      --header 'Press CTRL-Y to copy query into clipboard, CTRL-E to preview output' \
+      --ansi \
+      --color=dark \
+      --preview-window 'up,95%,border-bottom,+{2}+3/3,~3' \
+      --preview="
+        # Only run if the query {q} is not empty
+        if [ -n \"{q}\" ]; then
+          # Run awk with the query {q} on the cached stdin data
+          # 2>&1 redirects stderr, so you see syntax errors in the preview
+          cat \"$tmpfile\" | eval jq {q} 2>&1;
+        else
+          # Show a prompt if the query is empty
+          echo 'Type your jq query...';
+        fi
+      "
 }
 
 eval "$(zoxide init bash)"

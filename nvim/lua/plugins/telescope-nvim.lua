@@ -34,6 +34,7 @@ return {
         },
         vimgrep_arguments = {
           "rg",
+          "--follow",
           "--color=never",
           "--no-heading",
           "--with-filename",
@@ -47,7 +48,7 @@ return {
       pickers = {
         find_files = {
           hidden = true,
-          find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+          find_command = { "rg", "--follow", "--files", "--hidden", "--glob", "!**/.git/*" },
           push_tagstack_on_edit = true,
         },
         buffers = {
