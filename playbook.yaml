@@ -189,12 +189,19 @@
         pkg:
           - jq
 
-    # Any text to JSON
-    - name: Install jc, tool to convert (pretty much) any input to JSON
-      become: true
-      ansible.builtin.apt:
-        pkg:
-          - jc
+    # Convert any standard Linux utilit/tool to JSON
+    - name: "Check if jc is already installed"
+      ansible.builtin.stat:
+        path: "{{ bin_dir }}/jc"
+      register: jc_binary_stat
+
+    - name: "Install jc"
+      ansible.builtin.unarchive:
+        src: https://github.com/kellyjonbrazil/jc/releases/download/v1.25.6/jc-1.25.6-linux-x86_64.tar.gz
+        dest: "{{ bin_dir }}"
+        remote_src: true
+      when: not jc_binary_stat.stat.exists
+    ###
 
     # XML manipulation tool
     - name: Install xmlstarlet
