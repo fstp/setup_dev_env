@@ -29,6 +29,11 @@ shopt -s checkwinsize
 
 alias pbcopy='xclip -selection clipboard'
 
+alias batj='bat -l json'
+alias batm='bat -l md'
+
+export FZF_DEFAULT_COMMAND="fd --follow --hidden --no-ignore-vcs --exclude .git --exclude node_modules --exclude target"
+
 export FZF_DEFAULT_OPTS="--bind '\
 ctrl-y:preview-up,ctrl-e:preview-down,\
 ctrl-b:preview-page-up,ctrl-f:preview-page-down,\
@@ -36,15 +41,26 @@ ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down,\
 ctrl-o:toggle-preview,\
 ctrl-v:execute(nvim {1})'\
  --preview 'if [ -d "{}" ]; then tree -C "{}"; else bat --style=numbers --color=always --line-range :500 "{}"; fi'\
+ --preview-window 'up,70%,border-bottom'\
  -m\
- --ansi"
+ --no-sort\
+ --color=dark"
 
-# CTRL-Y to copy the command into clipboard using pbcopy
-export FZF_CTRL_R_OPTS=" \
-  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort' \
-  --color header:italic \
+export FZF_CTRL_T_OPTS=" \
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | xclip -selection clipboard)+abort' \
+  --color=dark \
   --preview-window=:hidden \
-  --height 60% \
+  --preview-window 'up,70%,border-bottom'\
+  --height 100% \
+  --header 'Press CTRL-Y to copy path into clipboard'"
+
+export FZF_CTRL_R_OPTS=" \
+  --layout=reverse
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | xclip -selection clipboard)+abort' \
+  --color=dark \
+  --preview-window=:hidden \
+  --preview-window 'up,70%,border-bottom'\
+  --height 100% \
   --header 'Press CTRL-Y to copy command into clipboard'"
 
 export FZF_ALT_C_COMMAND="fd --type d --hidden --no-ignore-vcs --exclude .git --exclude node_modules --exclude target"
@@ -56,28 +72,31 @@ export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
 fzf-rg() {
   rg --follow --color=always --colors="match:fg:magenta" --line-number --hidden --no-heading --smart-case "${@:-}" |
     fzf --ansi \
+    --layout=reverse \
     --color=dark \
     --delimiter : \
-    --preview 'bat --color=always {1} --highlight-line {2}' \
-    --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
+    --preview 'bat --paging=always --color=always {1} --highlight-line {2}' \
+    --preview-window 'up,70%,border-bottom,+{2}+3/3,~3' \
     --bind 'enter:execute(nvim {1} +{2})'
 }
 
 fzf-fd() {
   fd --follow --type f --hidden --no-ignore-vcs --exclude .git --exclude node_modules --exclude target "${@:-}" |
     fzf --ansi \
+    --layout=reverse \
     --color=dark \
     --delimiter : \
-    --preview 'bat -p --color=always {1}' \
-    --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
+    --preview 'bat --color=always --paging=always {1}' \
+    --preview-window 'up,70%,border-bottom' \
     --bind 'enter:execute(nvim {1})'
 }
 
 fzf-gl() {
-  git log --oneline --decorate --color=always --no-merges "$@" | \
+  git log --oneline --color=always --decorate --date=short --format="%C(bold blue)%h %C(cyan)%an %C(bold green)%ad %C(auto)%d %C(white)%s%C(reset)" --no-merges "$@" | \
     fzf -m --ansi --color=dark --no-sort \
-    --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always' \
-    --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
+    --layour=reverse \
+    --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always | bat --paging=always' \
+    --preview-window 'up,70%,border-bottom' \
     --bind 'enter:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always | bat -p --paging=always)'
 }
 
@@ -100,16 +119,13 @@ fzf-awk() {
   cat > "$tmpfile"
 
   # 4. Run fzf
-  #    We don't pipe any list into fzf; it starts empty.
-  #    --print-query: When you press Enter, fzf will print your awk script.
-  #    --preview: This is the core logic.
-  fzf --bind "ctrl-e:execute(cat \"$tmpfile\" | eval awk {q} 2>&1 | bat -p --paging=always),\
+  fzf --bind "ctrl-e:execute(cat \"$tmpfile\" | eval awk {q} 2>&1 | bat --paging=always),\
 ctrl-y:execute(echo -n {q} | xclip -selection clipboard),\
 enter:execute(cat \"$tmpfile\" | eval awk {q} 2>&1)+abort" \
       --header 'Press CTRL-Y to copy query into clipboard, CTRL-E to preview output' \
       --ansi \
       --color=dark \
-      --preview-window 'up,95%,border-bottom,+{2}+3/3,~3' \
+      --preview-window 'up,99%,border-rounded' \
       --preview="
         # Only run if the query {q} is not empty
         if [ -n \"{q}\" ]; then
@@ -126,8 +142,7 @@ enter:execute(cat \"$tmpfile\" | eval awk {q} 2>&1)+abort" \
 # fzf-jq: Interactively preview a jq script on stdin
 #
 # Usage:
-#   cat data.txt | fzf-awk
-#   ls -l | fzf-awk
+#   curl -s https://api.example.com/data | fzf-jq
 #
 fzf-jq() {
   # 1. Create a temporary file to cache stdin
@@ -142,16 +157,13 @@ fzf-jq() {
   cat > "$tmpfile"
 
   # 4. Run fzf
-  #    We don't pipe any list into fzf; it starts empty.
-  #    --print-query: When you press Enter, fzf will print your awk script.
-  #    --preview: This is the core logic.
   fzf --bind "ctrl-e:execute(cat \"$tmpfile\" | eval jq {q} 2>&1 | jless),\
 ctrl-y:execute(echo -n {q} | xclip -selection clipboard),\
 enter:execute(cat \"$tmpfile\" | eval jq {q} 2>&1)+abort" \
       --header 'Press CTRL-Y to copy query into clipboard, CTRL-E to preview output' \
       --ansi \
       --color=dark \
-      --preview-window 'up,95%,border-bottom,+{2}+3/3,~3' \
+      --preview-window 'up,99%,border-rounded' \
       --preview="
         # Only run if the query {q} is not empty
         if [ -n \"{q}\" ]; then
@@ -165,6 +177,7 @@ enter:execute(cat \"$tmpfile\" | eval jq {q} 2>&1)+abort" \
       "
 }
 
+
 eval "$(zoxide init bash)"
 
 # Git aliases
@@ -172,7 +185,9 @@ alias gds='git diff --staged'
 alias gd='git diff'
 alias gs='git status'
 alias gau='git add -u'
-alias gl='git log --oneline --graph --decorate'
+# alias gl='git log --oneline --graph --decorate'
+# alias gl='git log --graph --pretty=format:"%h (%an) %s %d"'
+alias gl='git log --graph --decorate --date=short --format="%C(bold blue)%h %C(cyan)%an %C(bold green)%ad %C(auto)%d %C(white)%s%C(reset)"'
 alias gco='git checkout'
 alias gc='git commit'
 alias gf='git fetch'
@@ -191,9 +206,6 @@ tvn() {
     fi
   done
 }
-
-alias fdg='fd -I -H -g'
-alias fdr='fd -I -H --regex'
 
 # Shortcuts for virtualenv
 alias ac='source .venv/bin/activate'
