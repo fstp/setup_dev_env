@@ -155,24 +155,6 @@
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/rustc"
 
-    - name: "[Rust] Install Television for easy searching"
-      ansible.builtin.shell: |
-        . ~/.bashrc
-        cargo install --locked television
-        mkdir -p ~/.config/television
-        asdf reshim rust
-      args:
-        executable: /usr/bin/bash
-      changed_when: true
-
-    - name: "[Rust] Softlink the Television config"
-      ansible.builtin.file:
-        src: "{{ playbook_dir }}/config.toml"
-        dest: "{{ home }}/.config/television/config.toml"
-        state: link
-        access_time: preserve
-        modification_time: preserve
-
     - name: "[Rust] Install Zoxide for easy searching"
       ansible.builtin.shell: |
         . ~/.bashrc

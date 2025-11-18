@@ -94,7 +94,7 @@ fzf-fd() {
 fzf-gl() {
   git log --oneline --color=always --decorate --date=short --format="%C(bold blue)%h %C(cyan)%an %C(bold green)%ad %C(auto)%d %C(white)%s%C(reset)" --no-merges "$@" | \
     fzf -m --ansi --color=dark --no-sort \
-    --layour=reverse \
+    --layout=reverse \
     --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always | bat --paging=always' \
     --preview-window 'up,70%,border-bottom' \
     --bind 'enter:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always | bat -p --paging=always)'
