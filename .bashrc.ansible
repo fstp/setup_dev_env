@@ -32,6 +32,8 @@ alias pbcopy='xclip -selection clipboard'
 alias batj='bat -l json'
 alias batm='bat -l md'
 
+alias vipedn='vipe >/dev/null'
+
 export FZF_DEFAULT_COMMAND="fd --follow --hidden --no-ignore-vcs --exclude .git --exclude node_modules --exclude target"
 
 export FZF_DEFAULT_OPTS="--bind '\
@@ -187,7 +189,7 @@ alias gs='git status'
 alias gau='git add -u'
 # alias gl='git log --oneline --graph --decorate'
 # alias gl='git log --graph --pretty=format:"%h (%an) %s %d"'
-alias gl='git log --graph --decorate --date=short --format="%C(bold blue)%h %C(cyan)%an %C(bold green)%ad %C(auto)%d %C(white)%s%C(reset)"'
+alias gl='git log --graph --decorate --date=short --format="%C(bold blue)%h %C(cyan)%an %C(bold green)%ad %C(auto)%d %C(white)%s%C(reset)" --decorate-refs-exclude="refs/tags/*"'
 alias gco='git checkout'
 alias gc='git commit'
 alias gf='git fetch'
