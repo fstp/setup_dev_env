@@ -94,7 +94,7 @@ fzf-fd() {
 }
 
 fzf-gl() {
-  git log --oneline --color=always --decorate --date=short --format="%C(bold blue)%h %C(cyan)%an %C(bold green)%ad %C(auto)%d %C(white)%s%C(reset)" --no-merges "$@" | \
+  git log --oneline --color=always --decorate --date=short --format="%C(bold blue)%h %C(cyan)%an %C(bold green)%ad %C(auto)%d %C(white)%s%C(reset)" --decorate-refs-exclude="refs/tags/*" --no-merges "$@" | \
     fzf -m --ansi --color=dark --no-sort \
     --layout=reverse \
     --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always | bat --paging=always' \
