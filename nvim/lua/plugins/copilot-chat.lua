@@ -9,7 +9,7 @@ return {
     opts = {
       -- debug = true, -- Enable debugging
       debug = false, -- Enable debugging
-      model = "claude-sonnet-4",
+      model = "gemini-2.5-pro",
       -- See Configuration section for rest
       mappings = {
         reset = {
