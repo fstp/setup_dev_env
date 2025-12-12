@@ -46,7 +46,8 @@ ctrl-v:execute(nvim {1})'\
  --preview-window 'up,70%,border-bottom'\
  -m\
  --no-sort\
- --color=dark"
+ --color=dark\
+ --layout reverse"
 
 export FZF_CTRL_T_OPTS=" \
   --bind 'ctrl-y:execute-silent(echo -n {2..} | xclip -selection clipboard)+abort' \
@@ -79,18 +80,7 @@ fzf-rg() {
     --delimiter : \
     --preview 'bat --paging=always --color=always {1} --highlight-line {2}' \
     --preview-window 'up,70%,border-bottom,+{2}+3/3,~3' \
-    --bind 'enter:execute(nvim {1} +{2})'
-}
-
-fzf-fd() {
-  fd --follow --type f --hidden --no-ignore-vcs --exclude .git --exclude node_modules --exclude target "${@:-}" |
-    fzf --ansi \
-    --layout=reverse \
-    --color=dark \
-    --delimiter : \
-    --preview 'bat --color=always --paging=always {1}' \
-    --preview-window 'up,70%,border-bottom' \
-    --bind 'enter:execute(nvim {1})'
+    --bind 'ctrl-v:execute(nvim {1} +{2})'
 }
 
 fzf-gl() {
@@ -99,7 +89,8 @@ fzf-gl() {
     --layout=reverse \
     --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always | bat --paging=always' \
     --preview-window 'up,70%,border-bottom' \
-    --bind 'enter:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always | bat -p --paging=always)'
+    --header 'CTRL-E to preview output' \
+    --bind 'ctrl-e:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always | bat -p --paging=always)'
 }
 
 # fzf-awk: Interactively preview an awk script on stdin
