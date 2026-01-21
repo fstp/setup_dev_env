@@ -73,7 +73,7 @@ export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
 # 2. Interactively narrow down the list using fzf
 # 3. Open the file in Vim
 fzf-rg() {
-  rg --follow --color=always --colors="match:fg:magenta" --line-number --hidden --no-heading --smart-case "${@:-}" |
+  rg --follow --color=always --colors="match:fg:magenta" --no-ignore-vcs --line-number --hidden --no-heading --smart-case "${@:-}" 2>/dev/null |
     fzf --ansi \
     --layout=reverse \
     --color=dark \
