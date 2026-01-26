@@ -1,0 +1,51 @@
+#!/bin/bash
+# vim: ft=bash
+
+set -e
+set -o pipefail
+
+# 1. Capture the output directory
+OUTPUT_DIR="${1%/}"
+
+# 2. Validate input
+if [ -z "$OUTPUT_DIR" ]; then
+    echo "Error: Output directory argument is missing."
+    echo "Usage: git log --oneline | head -n1 | generate_patch_files <output_directory>"
+    exit 1
+fi
+
+# 3. Create the directory
+mkdir -p "$OUTPUT_DIR"
+
+# 4. Process Stdin line by line
+while read -r LINE; do
+    # Skip empty lines
+    if [[ -z "${LINE// /}" ]]; then continue; fi
+
+    # Extract SHA (Col 1)
+    SHA=$(echo "$LINE" | cut -d' ' -f1)
+
+    # Extract the rest (Col 2+) and Clean it
+    # 1. cut: get everything after column 1
+    # 2. sed: remove parens (...)
+    # 3. sed: replace spaces, colons and hyphens with underscores
+    # 4. sed: squeeze repeating underscores (optional but cleaner: __ -> _)
+    FILENAME=$(echo "$LINE" | cut -d' ' -f2- \
+        | sed -e 's/ *([^)]*)//g' \
+        | sed -e 's/[ -:]/_/g' \
+        | sed -e 's/__*/_/g')
+
+    # Add .patch extension
+    FULL_PATH="${OUTPUT_DIR}/${SHA}_${FILENAME}.patch"
+
+    # Generate the patch to stdout, redirect to custom filename
+    # We use --stdout so we can control the exact filename
+    if git format-patch -1 "$SHA" --stdout > "$FULL_PATH"; then
+        echo "Created: $FULL_PATH"
+    else
+        echo "Error: Failed to process $SHA"
+        # Remove empty file if git failed
+        rm -f "$FULL_PATH"
+    fi
+
+done

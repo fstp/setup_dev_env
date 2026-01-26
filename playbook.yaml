@@ -164,6 +164,15 @@
         executable: /usr/bin/bash
       changed_when: true
 
+    - name: "[Rust] Install fd as a find replacement"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        cargo install --locked fd-find
+        asdf reshim rust
+      args:
+        executable: /usr/bin/bash
+      changed_when: true
+
     # JSON manipulation tool
     - name: Install jq
       become: true
@@ -297,22 +306,12 @@
           - curl
           - build-essential
           # Neovim python plugins
-          - fd-find # venv-select
           - black
           # - python3-debugpy
           - flake8
           - isort
           - mypy
           - pylint
-
-    - name: "Softlink fdfind to fd"
-      become: true
-      ansible.builtin.file:
-        src: /usr/bin/fdfind
-        dest: /usr/bin/fd
-        state: link
-        access_time: preserve
-        modification_time: preserve
 
     - name: "Clone Neovim"
       ansible.builtin.git:
