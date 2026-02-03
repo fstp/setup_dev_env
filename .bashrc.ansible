@@ -34,7 +34,7 @@ alias batm='bat -l md'
 
 alias vipedn='vipe >/dev/null'
 
-export FZF_DEFAULT_COMMAND="fd --follow --hidden --no-ignore-vcs --exclude .git --exclude node_modules --exclude target"
+export FZF_DEFAULT_COMMAND="fd -u --follow --exclude .git --exclude node_modules --exclude target"
 
 export FZF_DEFAULT_OPTS="--bind '\
 ctrl-y:preview-up,ctrl-e:preview-down,\
@@ -188,16 +188,10 @@ alias gca='git commit -C HEAD --amend'
 alias gb='git branch'
 
 alias tree='tree -A -h -C'
+alias as-tree='tree -A -h -C --fromfile'
 
-tvn() {
-  local arg="${1:-files}"
-  tv "$arg" | sed -e 's/:/ \+/g' | while read -r first second; do
-    if [ -n "${second// /}" ]; then
-      nvim "$first" "$second"
-    else
-      nvim "$first"
-    fi
-  done
+function q() {
+  vipe | llm "$@" | bat -l markdown
 }
 
 # Shortcuts for virtualenv
