@@ -7,6 +7,7 @@ return {
     -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     'nvim-treesitter/nvim-treesitter-textobjects',
   },
+  checkout = 'main',
   build = ':TSUpdate',
   opts = {
     highlight = {
@@ -45,7 +46,7 @@ return {
     },
   },
   config = function(_, opts)
-    local configs = require("nvim-treesitter.configs")
-    configs.setup(opts)
+    --local configs = require("nvim-treesitter.configs")
+    --configs.setup(opts)
   end
 }
