@@ -10,6 +10,16 @@ keymap.set("n", "<leader>ll", function()
   require(basename)
 end, { desc = "Load current project lua file" })
 
+
+keymap.set("t", "<C-h>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateLeft") end) end, { silent = true })
+keymap.set("t", "<C-j>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateDown") end) end, { silent = true })
+keymap.set("t", "<C-k>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateUp") end) end, { silent = true })
+keymap.set("t", "<C-l>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateRight") end) end, { silent = true })
+keymap.set("t", "<C-i><C-i>", function() vim.cmd("stopinsert") end, { silent = true })
+
+-- Snacks Terminal
+keymap.set("n", "<leader>ii", ":lua require('snacks').terminal()<CR>", { desc = "Open Snacks Terminal" })
+
 -- General keymaps
 keymap.set("i", "jk", "<ESC>")                 -- exit insert mode with jk
 keymap.set("i", "ii", "<ESC>")                 -- exit insert mode with ii
