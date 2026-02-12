@@ -11,14 +11,33 @@ keymap.set("n", "<leader>ll", function()
 end, { desc = "Load current project lua file" })
 
 
+-- Gemini CLI
+keymap.set("n", "<leader>ad", function()
+  local api = require("gemini_cli").api
+  api.send_diagnostics_with_prompt()
+end, { desc = "Send diagnostics for current buffer to Gemini" })
+
+keymap.set("n", "<leader>ap", function()
+  local api = require("gemini_cli").api
+  api.open_command_picker(nil, function(picker, item)
+    if item.text == "/custom" then
+      -- Implement custom command handling
+    else
+      -- Default behavior
+      picker:close()
+      api.send_command(item.text)
+    end
+  end)
+end, { desc = "Interactive command selector" })
+
+-- Snacks Terminal
+keymap.set("n", "<leader>ii", ":lua require('snacks').terminal()<CR>", { desc = "Open Snacks Terminal" })
+
 keymap.set("t", "<C-h>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateLeft") end) end, { silent = true })
 keymap.set("t", "<C-j>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateDown") end) end, { silent = true })
 keymap.set("t", "<C-k>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateUp") end) end, { silent = true })
 keymap.set("t", "<C-l>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateRight") end) end, { silent = true })
 keymap.set("t", "<C-i><C-i>", function() vim.cmd("stopinsert") end, { silent = true })
-
--- Snacks Terminal
-keymap.set("n", "<leader>ii", ":lua require('snacks').terminal()<CR>", { desc = "Open Snacks Terminal" })
 
 -- General keymaps
 keymap.set("i", "jk", "<ESC>")                 -- exit insert mode with jk
@@ -72,8 +91,6 @@ keymap.set('n', '<M-p>', require('miniharp').prev, { desc = 'miniharp: prev file
 -- Quickfix keymaps
 keymap.set("n", "<leader>qo", ":copen<CR>")  -- open quickfix list
 keymap.set("n", "<leader>qf", ":cfirst<CR>") -- jump to first quickfix list item
--- keymap.set("n", "<leader>qn", ":cnext<CR>") -- jump to next quickfix list item
--- keymap.set("n", "<leader>qp", ":cprev<CR>") -- jump to prev quickfix list item
 keymap.set("n", "<leader>ql", ":clast<CR>")  -- jump to last quickfix list item
 keymap.set("n", "<leader>qc", ":cclose<CR>") -- close quickfix list
 
@@ -91,7 +108,6 @@ keymap.set('n', '<leader>fz', ":Telescope zoxide list<CR>", { desc = "Zoxide: Fi
 keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = "Find files" })
 keymap.set('n', '<leader>fl', require('telescope.builtin').oldfiles, { desc = "Find recently opened files" })
 
--- keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, {})
 keymap.set('n', '<leader>fgg', require('telescope').extensions.live_grep_args.live_grep_args,
   { desc = "Grep entire project" })
 
@@ -105,56 +121,14 @@ keymap.set('n', '<leader>fs', require('telescope.builtin').current_buffer_fuzzy_
   { desc = "Fuzzy search current buffer" })
 keymap.set('n', '<leader>fo', require('telescope.builtin').lsp_document_symbols, { desc = "Find LSP symbols" })
 keymap.set('n', '<leader>fi', require('telescope.builtin').registers, { desc = "Registers" })
---keymap.set('n', '<leader>fm', function() require('telescope.builtin').treesitter({default_text=":method:"}) end)
--- keymap.set('n', '<leader>fm', require('telescope.builtin').treesitter, {})
 keymap.set('n', '<leader>fm', require('telescope.builtin').marks, { desc = "Find marks" })
 keymap.set('n', '<leader>fj', require('telescope.builtin').jumplist, { desc = "Browse jumplist" })
---keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, {})
--- keymap.set('n', '<leader>fw', function() require('telescope.builtin').current_buffer_fuzzy_find{default_text = vim.fn.expand("<cword>")} end)
 keymap.set('n', '<leader>fr', require('telescope.builtin').resume, { desc = "Resume last picker" })
 keymap.set('n', '<leader>fn', require('telescope').extensions.neoclip.default, { desc = "Find in clipboard history" })
 keymap.set('n', '<leader>ft', require('telescope.builtin').tagstack, { desc = "Browse tagstack" })
 keymap.set('n', '<leader>fq', require('telescope.builtin').quickfix, { desc = "Search quickfix list" })
 keymap.set("n", '<leader>fd', function() require('telescope.builtin').diagnostics({ bufnr = 0 }) end,
   { desc = "Diagnostics current buffer" })
-
--- local floating_win = -1
--- local floating_height = 50
--- local floating_width = 100
-
--- local close_floating = function(_)
---     if vim.api.nvim_win_is_valid(floating_win) then
---         vim.api.nvim_win_close(floating_win, false)
---         floating_win = -1
---     end
--- end
-
--- local focus_floating = function(_)
---     if vim.api.nvim_win_is_valid(floating_win) then
---         vim.api.nvim_set_current_win(floating_win)
---     end
--- end
-
--- local open_floating = function()
---     close_floating({})
---     floating_win = vim.api.nvim_open_win(0, true,
---         {
---             relative = "win",
---             row = 50,
---             col = 100,
---             width = floating_width,
---             height = floating_height,
---             border = "rounded",
---             anchor =
---             "SW"
---         })
--- end
-
-
--- local wrapper_floating = function(opts)
---     open_floating()
---     return require('telescope.builtin').lsp_definitions(opts)
--- end
 
 local wrapper = function(_)
   local lookup = {
@@ -171,11 +145,6 @@ local wrapper = function(_)
   return require('telescope.builtin').lsp_definitions(opts)
 end
 
--- Floating window management
--- keymap.set('n', '<leader>wc', close_floating, {})
--- keymap.set('n', '<leader>wf', focus_floating, {})
--- keymap.set('n', '<leader>wo', wrapper_floating, {})
-
 local current_buffer = function(_)
   vim.print(vim.fn.expand("%:p"))
 end
@@ -185,28 +154,10 @@ keymap.set('n', '<leader>wp', current_buffer, {})
 keymap.set('n', '<leader>rp', '<cmd>silent !~/script/rsync_push<CR>')
 keymap.set('n', '<leader>rg', '<cmd>silent !~/script/rsync_get<CR>')
 
-local accept_word = function()
-  require("copilot.suggestion").accept_word({})
-  require("copilot.suggestion").next({})
-end
-
-local accept_line = function()
-  require("copilot.suggestion").accept_line({})
-  require("copilot.suggestion").next({})
-end
-
-local clear_suggestion = function()
-  require("copilot.suggestion").dismiss({})
-end
-
 -- Copilot
--- keymap.set('i', '<C-o>', accept_word, {})
--- keymap.set('i', '<C-k>', accept_line, {})
--- keymap.set('i', '<C-i>', clear_suggestion, {})
 keymap.set('v', '<leader>cc', '<cmd>CopilotChatToggle<CR>', { desc = "Toggle Copilot Chat" })
 keymap.set('v', '<leader>ce', '<cmd>CopilotChatExplain<CR>', { desc = "Explain selected code" })
 keymap.set('v', '<leader>cd', '<cmd>CopilotChatDocs<CR>', { desc = "Generate docs for selection" })
--- keymap.set('v', '<leader>cf', '<cmd>CopilotChatFix<CR>', { desc = "Fix selected code" })
 keymap.set('n', '<leader>cc', '<cmd>CopilotChatToggle<CR>', { desc = "Toggle Copilot Chat" })
 
 keymap.set('n', '<leader>cf', function()
@@ -222,13 +173,11 @@ keymap.set('n', '<leader>cb', function()
 end, { desc = "Ask about buffer" })
 
 -- LSP
--- keymap.set('n', '<leader>gg', '<cmd>lua vim.lsp.buf.hover()<CR>')
 keymap.set('n', '<leader>gd', wrapper, { desc = "Go to definition" })
 keymap.set('n', '<leader>gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', { desc = "Go to declaration" })
 keymap.set('n', '<leader>gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', { desc = "Go to implementation" })
 keymap.set('n', '<leader>gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', { desc = "Go to type definition" })
 keymap.set('n', '<leader>gr', require('telescope.builtin').lsp_references, { desc = "Find references" })
--- keymap.set('n', '<leader>gs', '<cmd>lua vim.lsp.buf.signature_help()<CR>', { desc = "Show signature help" })
 keymap.set('n', '<leader>rr', '<cmd>lua vim.lsp.buf.rename()<CR>', { desc = "Rename symbol" })
 keymap.set('n', '<leader>gf', '<cmd>lua vim.lsp.buf.format({async = true})<CR>', { desc = "Format document" })
 keymap.set('v', '<leader>gf', '<cmd>lua vim.lsp.buf.format({async = true})<CR>', { desc = "Format selection" })
@@ -303,8 +252,6 @@ keymap.set("n", '<leader>d?',
   end)
 keymap.set("n", '<leader>df', '<cmd>Telescope dap frames<cr>')
 keymap.set("n", '<leader>dh', '<cmd>Telescope dap commands<cr>')
--- keymap.set("n", '<leader>de',
---   function() require('telescope.builtin').diagnostics({ default_text = ":E:", bufnr = 0 }) end)
 keymap.set("n", "<leader>du", "<cmd>lua require'dap'.run_to_cursor()<cr>")
 keymap.set("n", "<leader>dz", "<cmd>lua require'dapui'.toggle({reset = true})<cr>")
 
