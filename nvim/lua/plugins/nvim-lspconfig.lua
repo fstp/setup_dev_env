@@ -46,7 +46,7 @@ return {
         'quick_lint_js',
         'yamlls',
         'pyright',
-        --'erlangls',
+        'erlangls',
         --'angularls',
         'elixirls',
         'ansiblels',
@@ -103,8 +103,8 @@ return {
     -- })
 
     -- Manual setup for Erlang/Elixir (build language servers from source)
-    -- lspconfig.erlangls.setup {}
-    -- lspconfig.elixirls.setup {}
+    lspconfig.erlangls.setup {}
+    lspconfig.elixirls.setup {}
 
     lspconfig.rust_analyzer.setup {}
     lspconfig.gleam.setup {}
