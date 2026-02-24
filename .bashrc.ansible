@@ -42,32 +42,40 @@ ctrl-b:preview-page-up,ctrl-f:preview-page-down,\
 ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down,\
 ctrl-o:toggle-preview,\
 ctrl-v:execute(nvim {1})'\
- --preview 'if [ -d "{}" ]; then tree -C "{}"; else bat --style=numbers --color=always --line-range :500 "{}"; fi'\
- --preview-window 'up,70%,border-bottom'\
- -m\
- --no-sort\
- --color=dark\
- --layout reverse"
+ --preview 'if [ -d "{}" ]; then tree -C "{}"; else bat --style=numbers --color=always --line-range :500 "{}"; fi' \
+ --preview-window 'up,70%,border-bottom' \
+ -m \
+ --no-sort \
+ --color=dark \
+ --preview-window=:hidden"
 
 export FZF_CTRL_T_OPTS=" \
-  --bind 'ctrl-y:execute-silent(echo -n {2..} | xclip -selection clipboard)+abort' \
+  --bind 'ctrl-n:execute-silent(echo -n {+} | xclip -selection clipboard)+abort' \
   --color=dark \
   --preview-window=:hidden \
-  --preview-window 'up,70%,border-bottom'\
+  --preview-window 'up,70%,border-bottom' \
+  -m \
   --height 100% \
-  --header 'Press CTRL-Y to copy path into clipboard'"
+  --header 'Find File - CTRL-N to copy path, CTRL-V to edit in Nvim'"
 
 export FZF_CTRL_R_OPTS=" \
-  --layout=reverse
-  --bind 'ctrl-y:execute-silent(echo -n {2..} | xclip -selection clipboard)+abort' \
+  --bind 'ctrl-n:execute-silent(echo -n {2..} | xclip -selection clipboard)+abort' \
   --color=dark \
   --preview-window=:hidden \
-  --preview-window 'up,70%,border-bottom'\
+  --preview-window 'up,70%,border-bottom' \
   --height 100% \
-  --header 'Press CTRL-Y to copy command into clipboard'"
+  --header 'Command History - CTRL-N to copy command, Enter to execute' \
+  --layout reverse"
 
 export FZF_ALT_C_COMMAND="fd --type d --hidden --no-ignore-vcs --exclude .git --exclude node_modules --exclude target"
-export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
+export FZF_ALT_C_OPTS=" \
+  --bind 'ctrl-n:execute-silent(echo -n {+} | xclip -selection clipboard)+abort' \
+  --preview 'tree -C {}' \
+  --color=dark \
+  --preview-window=:hidden \
+  --preview-window 'up,70%,border-bottom' \
+  --height 100% \
+  --header 'Find Directory - CTRL-N to copy path, CTRL-V to open in Nvim'"
 
 # 1. Search for text in files using Ripgrep
 # 2. Interactively narrow down the list using fzf
