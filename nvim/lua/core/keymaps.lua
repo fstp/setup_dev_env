@@ -31,8 +31,7 @@ keymap.set("n", "<leader>ap", function()
 end, { desc = "Interactive command selector" })
 
 -- Snacks Terminal
-keymap.set("n", "<leader>ii", ":lua require('snacks').terminal()<CR>", { desc = "Open Snacks Terminal" })
-
+keymap.set("n", "<leader>i", ":lua require('snacks').terminal()<CR>", { desc = "Open Snacks Terminal" })
 vim.api.nvim_create_autocmd("TermOpen", {
   callback = function()
     local opts = { buffer = 0, silent = true }
@@ -40,8 +39,15 @@ vim.api.nvim_create_autocmd("TermOpen", {
     keymap.set("t", "<C-j>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateDown") end) end, opts)
     keymap.set("t", "<C-k>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateUp") end) end, opts)
     keymap.set("t", "<C-l>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateRight") end) end, opts)
+    keymap.set("t", "<C-q>", function() vim.cmd("stopinsert") vim.schedule(function() require('snacks').terminal() end) end, opts)
     keymap.set("t", "<C-i><C-i>", function() vim.cmd("stopinsert") end, opts)
   end,
+})
+
+-- Nvim Surround
+vim.g.nvim_surround_no_visual_mappings = true
+vim.keymap.set("v", "L", "<Plug>(nvim-surround-visual)", {
+    desc = "Add a surrounding pair around a motion (visual mode)",
 })
 
 -- General keymaps

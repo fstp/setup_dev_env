@@ -1,5 +1,5 @@
 return {
-  "zbirenbaum/copilot-cmp",
+  "fstp/copilot-cmp",
   after = { "copilot.lua" },
   enabled = true,
   config = function ()
