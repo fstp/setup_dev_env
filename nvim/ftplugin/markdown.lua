@@ -10,3 +10,12 @@ vim.keymap.set("n", "k", "gk")
 -- Spell check
 vim.opt.spelllang = 'en_us'
 vim.opt.spell = true
+
+-- Allow highlighting of inline codeblocks in markdown files
+vim.g.markdown_fenced_languages = {
+  "lua",
+  "python",
+  "erlang",
+  "bash",
+  "diff",
+}

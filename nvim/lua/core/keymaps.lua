@@ -33,11 +33,16 @@ end, { desc = "Interactive command selector" })
 -- Snacks Terminal
 keymap.set("n", "<leader>ii", ":lua require('snacks').terminal()<CR>", { desc = "Open Snacks Terminal" })
 
-keymap.set("t", "<C-h>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateLeft") end) end, { silent = true })
-keymap.set("t", "<C-j>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateDown") end) end, { silent = true })
-keymap.set("t", "<C-k>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateUp") end) end, { silent = true })
-keymap.set("t", "<C-l>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateRight") end) end, { silent = true })
-keymap.set("t", "<C-i><C-i>", function() vim.cmd("stopinsert") end, { silent = true })
+vim.api.nvim_create_autocmd("TermOpen", {
+  callback = function()
+    local opts = { buffer = 0, silent = true }
+    keymap.set("t", "<C-h>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateLeft") end) end, opts)
+    keymap.set("t", "<C-j>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateDown") end) end, opts)
+    keymap.set("t", "<C-k>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateUp") end) end, opts)
+    keymap.set("t", "<C-l>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateRight") end) end, opts)
+    keymap.set("t", "<C-i><C-i>", function() vim.cmd("stopinsert") end, opts)
+  end,
+})
 
 -- General keymaps
 keymap.set("i", "jk", "<ESC>")                 -- exit insert mode with jk
@@ -72,21 +77,6 @@ keymap.set("n", "<leader>pv", require("overlook.api").open_in_vsplit, { desc = "
 keymap.set("n", "<leader>pt", require("overlook.api").open_in_tab, { desc = "Open popup in tab" })
 keymap.set("n", "<leader>po", require("overlook.api").open_in_original_window, { desc = "Open popup in current window" })
 keymap.set("n", "<leader>pf", require("overlook.api").switch_focus, { desc = "Switch focus between popup/main window" })
-
--- MiniHarp
-keymap.set('n', '<leader>mm', require('miniharp').toggle_file, { desc = 'miniharp: toggle file mark' })
-keymap.set('n', '<leader>mc', require('miniharp').clear, { desc = 'miniharp: clear marks' })
-keymap.set('n', '<leader>ml', require('miniharp').show_list, { desc = 'miniharp: list marks' })
-keymap.set('n', '<leader>ms', require('miniharp').save, { desc = 'miniharp: save marks' })
-keymap.set('n', '<M-n>', require('miniharp').next, { desc = 'miniharp: next file mark' })
-keymap.set('n', '<M-p>', require('miniharp').prev, { desc = 'miniharp: prev file mark' })
-
--- Diff keymaps
--- keymap.set("n", "<leader>cc", ":diffput<CR>") -- put diff from current to other during diff
--- keymap.set("n", "<leader>cj", ":diffget 1<CR>") -- get diff from left (local) during merge
--- keymap.set("n", "<leader>ck", ":diffget 3<CR>") -- get diff from right (remote) during merge
--- keymap.set("n", "<leader>cn", "]c") -- next diff hunk
--- keymap.set("n", "<leader>cp", "[c") -- previous diff hunk
 
 -- Quickfix keymaps
 keymap.set("n", "<leader>qo", ":copen<CR>")  -- open quickfix list

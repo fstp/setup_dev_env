@@ -47,11 +47,9 @@ return {
         'yamlls',
         'pyright',
         'erlangls',
-        --'angularls',
         'elixirls',
         'ansiblels',
-        -- 'rust_analyzer',
-        -- 'tsserver',
+        'rust_analyzer',
         'biome',
         'gopls',
         'tailwindcss',
@@ -81,11 +79,11 @@ return {
     -- explicitly (https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim/issues/39)
     vim.api.nvim_command('MasonToolsInstall')
 
-    local lspconfig = require('lspconfig')
-    local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
-    local lsp_attach = function(client, bufnr)
+    -- local lspconfig = require('lspconfig')
+    -- local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+    -- local lsp_attach = function(client, bufnr)
       -- Create your keybindings here...
-    end
+    -- end
 
     -- Call setup on each LSP server
     -- require('mason-lspconfig').setup_handlers({
@@ -102,15 +100,20 @@ return {
     --   end
     -- })
 
-    -- Manual setup for Erlang/Elixir (build language servers from source)
-    lspconfig.erlangls.setup {}
-    lspconfig.elixirls.setup {}
+    vim.lsp.config("erlangls", {
+      cmd = { "erlang_ls" },
+      filetypes = { "erlang" },
+      root_markers = {".project", "erlang_ls.config", ".git"},
+    })
+    vim.lsp.enable("erlang")
 
-    lspconfig.rust_analyzer.setup {}
-    lspconfig.gleam.setup {}
+    -- lspconfig.elixirls.setup {}
+
+    -- lspconfig.rust_analyzer.setup {}
+    -- lspconfig.gleam.setup {}
 
     -- Lua LSP settings
-    lspconfig.lua_ls.setup {
+    vim.lsp.config("lua_ls", {
       on_init = function(client)
         local path = client.workspace_folders[1].name
         if vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc') then
@@ -144,23 +147,15 @@ return {
           },
         },
       },
-    }
-
-    -- lspconfig.tailwindcss.setup {
-      -- classAttributes = { "class", "className", "class:list", "classList", "ngClass" },
-      -- includeLanguages = {
-      --   eelixir = "html-eex",
-      --   heex = "html",
-      --   elixir = "html",
-      -- }
-    -- }
+    })
 
     -- Globally configure all LSP floating preview popups (like hover, signature help, etc)
-    local open_floating_preview = vim.lsp.util.open_floating_preview
+    local aux_open_floating_preview = vim.lsp.util.open_floating_preview
+
     function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
       opts = opts or {}
       opts.border = opts.border or "rounded" -- Set border to rounded
-      return open_floating_preview(contents, syntax, opts, ...)
+      return aux_open_floating_preview(contents, syntax, opts, ...)
     end
   end
 }
