@@ -148,6 +148,7 @@ return {
         },
       },
     })
+    vim.lsp.enable("lua")
 
     -- Globally configure all LSP floating preview popups (like hover, signature help, etc)
     local aux_open_floating_preview = vim.lsp.util.open_floating_preview
