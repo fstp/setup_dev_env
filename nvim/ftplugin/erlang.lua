@@ -1,6 +1,6 @@
 vim.b.hl_idx = 0
 
-local highlight_groups = { "DiffAdd" }
+local highlight_groups = { "CurSearch" }
 
 local function find_function_clause(node)
   if node == nil then
