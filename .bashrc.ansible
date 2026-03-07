@@ -87,7 +87,7 @@ fzf-rg() {
     --color=dark \
     --delimiter : \
     --preview 'bat --paging=always --color=always {1} --highlight-line {2}' \
-    --preview-window 'up,70%,border-bottom,+{2}+3/3,~3' \
+    --preview-window 'up,70%,border-bottom,+{2}+3/3,~3,nohidden' \
     --bind 'ctrl-v:execute(nvim {1} +{2})'
 }
 
@@ -96,7 +96,7 @@ fzf-gl() {
     fzf -m --ansi --color=dark --no-sort \
     --layout=reverse \
     --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always | bat --paging=always' \
-    --preview-window 'up,70%,border-bottom' \
+    --preview-window 'up,70%,border-bottom,nohidden' \
     --header 'CTRL-E to preview output' \
     --bind 'ctrl-e:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always | bat -p --paging=always)'
 }
@@ -126,7 +126,7 @@ enter:execute(cat \"$tmpfile\" | eval awk {q} 2>&1)+abort" \
       --header 'Press CTRL-Y to copy query into clipboard, CTRL-E to preview output' \
       --ansi \
       --color=dark \
-      --preview-window 'up,99%,border-rounded' \
+      --preview-window 'up,99%,border-rounded,nohidden' \
       --preview="
         # Only run if the query {q} is not empty
         if [ -n \"{q}\" ]; then
@@ -164,7 +164,7 @@ enter:execute(cat \"$tmpfile\" | eval jq {q} 2>&1)+abort" \
       --header 'Press CTRL-Y to copy query into clipboard, CTRL-E to preview output' \
       --ansi \
       --color=dark \
-      --preview-window 'up,99%,border-rounded' \
+      --preview-window 'up,99%,border-rounded,nohidden' \
       --preview="
         # Only run if the query {q} is not empty
         if [ -n \"{q}\" ]; then
