@@ -48,8 +48,18 @@ return {
       pickers = {
         find_files = {
           hidden = true,
-          find_command = { "rg", "--follow", "--files", "--hidden", "--glob", "!**/.git/*" },
+          find_command = {"fd", "-u", "--follow", "--exclude", ".git"},
+          -- find_command = { "rg", "--follow", "--files", "--hidden", "--glob", "!**/.git/*" },
           push_tagstack_on_edit = true,
+          attach_mappings = function(_, map)
+            map('n', '<C-w>', function(prompt_bufnr)
+              local entry = require('telescope.actions.state').get_selected_entry()
+              require('telescope.actions').close(prompt_bufnr)
+              local dir = vim.fn.fnamemodify(entry.path, ':h')
+              vim.cmd('lcd ' .. vim.fn.fnameescape(dir))
+            end, { desc = "change_working_directory" })
+            return true
+          end
         },
         buffers = {
           sort_mru = true,

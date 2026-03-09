@@ -41,7 +41,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
     keymap.set("t", "<C-k>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateUp") end) end, opts)
     keymap.set("t", "<C-l>", function() vim.cmd("stopinsert") vim.schedule(function() vim.cmd("TmuxNavigateRight") end) end, opts)
     keymap.set("t", "<C-q>", function() vim.cmd("stopinsert") vim.schedule(function() require("snacks").terminal() end) end, opts)
-    keymap.set("t", "<C-i>", function() vim.cmd("stopinsert") end, opts)
+    keymap.set("t", "<C-i><C-i>", function() vim.cmd("stopinsert") end, opts)
     keymap.set("t", "<Tab>", "<Tab>", { buffer = true, nowait = true })
   end,
 })
@@ -148,9 +148,10 @@ local current_buffer = function(_)
 end
 keymap.set('n', '<leader>wp', current_buffer, {})
 
--- Remote management
-keymap.set('n', '<leader>rp', '<cmd>silent !~/script/rsync_push<CR>')
-keymap.set('n', '<leader>rg', '<cmd>silent !~/script/rsync_get<CR>')
+-- Working directory
+keymap.set('n', '<leader>rc', function() vim.cmd('lcd %:p:h') print(vim.fn.getcwd()) end, { desc = "Set working directory to current file" })
+keymap.set('n', '<leader>rp', '<cmd>ProjectRoot<CR>', { desc = "Set working directory to project root" })
+keymap.set('n', '<leader>ru', function() vim.cmd('lcd ..') print(vim.fn.getcwd()) end, { desc = "Set working directory up one level" })
 
 -- Copilot
 keymap.set('v', '<leader>cc', '<cmd>CopilotChatToggle<CR>', { desc = "Toggle Copilot Chat" })
