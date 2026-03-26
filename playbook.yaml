@@ -229,14 +229,23 @@
         scope: global
         value: difft
 
-    - name: "[Rust] Install htmlq, parse HTML like jq for JSON"
+    # - name: "[Rust] Install htmlq, parse HTML like jq for JSON"
+    #   ansible.builtin.shell: |
+    #     . ~/.bashrc
+    #     cargo install --locked htmlq
+    #     asdf reshim rust
+    #   args:
+    #     executable: /usr/bin/bash
+    #   changed_when: true
+
+    - name: "[Go] Install pup, it can parse HTML and produce JSON"
       ansible.builtin.shell: |
         . ~/.bashrc
-        cargo install --locked htmlq
-        asdf reshim rust
+        go install github.com/ericchiang/pup@latest
+        asdf reshim
       args:
         executable: /usr/bin/bash
-      changed_when: true
+        creates: "{{ home }}/.asdf/shims/pup"
 
     - name: "[Rust] Install ast-grep, grep on syntax pattern (using tree-sitter)"
       ansible.builtin.shell: |
