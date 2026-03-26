@@ -21,16 +21,18 @@ config.wsl_domains = {
 }
 
 config.default_domain = 'WSL:Ubuntu'
-config.font = wezterm.font 'Hack Nerd Font Mono'
---config.font = wezterm.font 'Terminess Nerd Font'
+--config.font = wezterm.font '3270 Nerd Font Cond'
+--config.font = wezterm.font 'BigBlueTermPlus Nerd Font Mono'
+--config.font = wezterm.font 'Hack Nerd Font Mono'
+config.font = wezterm.font 'Terminess Nerd Font'
 --config.font = wezterm.font 'Ubuntu Nerd Font'
 
 config.max_fps = 120
 
 -- For example, changing the color scheme:
 --config.color_scheme = 'Adventure'
--- config.color_scheme = 'Adventure Time (Gogh)'
-config.color_scheme = '3024 (dark) (terminal.sexy)'
+--config.color_scheme = 'Adventure Time (Gogh)'
+--config.color_scheme = '3024 (dark) (terminal.sexy)'
 
 -- and finally, return the configuration to wezterm
 return config
