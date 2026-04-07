@@ -54,6 +54,7 @@ return {
         'gopls',
         'tailwindcss',
         'svelte',
+        'jdtls',
       },
       -- Disable automtic setup for lua_ls since we have custom settings
       automatic_enable = {
@@ -99,6 +100,12 @@ return {
     --     })
     --   end
     -- })
+    --
+
+    -- vim.lsp.config("jdtls", {
+    --   root_markers = {".project", "build.gradle", ".git"},
+    -- })
+    -- vim.lsp.enable("jdtls")
 
     vim.lsp.config("erlangls", {
       cmd = { "erlang_ls" },

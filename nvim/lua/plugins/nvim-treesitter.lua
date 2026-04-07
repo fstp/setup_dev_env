@@ -7,7 +7,7 @@ return {
     -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     'nvim-treesitter/nvim-treesitter-textobjects',
   },
-  checkout = 'main',
+  branch = 'master',
   build = ':TSUpdate',
   opts = {
     highlight = {
@@ -28,6 +28,8 @@ return {
       'css',
       'tsx',
       'diff',
+      'erlang',
+      'yaml',
     },
     textobjects = {
       select = {
