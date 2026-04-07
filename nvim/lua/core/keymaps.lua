@@ -31,9 +31,9 @@ keymap.set("n", "<leader>ap", function()
 end, { desc = "Interactive command selector" })
 
 -- Snacks Terminal
-keymap.set("n", "<C-q>", ":lua require('snacks').terminal(nil, {win = {position = 'right'}})<CR>",
+keymap.set("n", "<C-q>", ":lua require('snacks').terminal(nil, {win = {position = 'right', width = 0.6}})<CR>",
   { desc = "Open Snacks Terminal" })
-keymap.set("n", "<leader>i", ":lua require('snacks').terminal(nil, {win = {position = 'right'}})<CR>",
+keymap.set("n", "<leader>i", ":lua require('snacks').terminal(nil, {win = {position = 'right', width = 0.6}})<CR>",
   { desc = "Open Snacks Terminal" })
 vim.api.nvim_create_autocmd("TermOpen", {
   callback = function()
