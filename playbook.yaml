@@ -227,7 +227,7 @@
       community.general.git_config:
         name: diff.external
         scope: global
-        value: difft
+        value: "difft --display inline"
 
     # - name: "[Rust] Install htmlq, parse HTML like jq for JSON"
     #   ansible.builtin.shell: |
