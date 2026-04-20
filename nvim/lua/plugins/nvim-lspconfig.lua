@@ -55,6 +55,7 @@ return {
         'tailwindcss',
         'svelte',
         'jdtls',
+        'zls',
       },
       -- Disable automtic setup for lua_ls since we have custom settings
       automatic_enable = {

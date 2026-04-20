@@ -10,6 +10,71 @@ keymap.set("n", "<leader>ll", function()
   require(basename)
 end, { desc = "Load current project lua file" })
 
+-- Fuzzy picker but only jump to location (for usage in terminal buffers for example)
+vim.keymap.set('n', '<leader>/', function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local winnr = vim.api.nvim_get_current_win()
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  local pickers = require('telescope.pickers')
+  local finders = require('telescope.finders')
+  local conf = require('telescope.config').values
+  local actions = require('telescope.actions')
+  local action_state = require('telescope.actions.state')
+
+  local entries = {}
+  for i, line in ipairs(lines) do
+    if line ~= "" then
+      table.insert(entries, { lnum = i, text = line })
+    end
+  end
+
+  pickers.new({}, {
+    prompt_title = 'Fuzzy Find Buffer',
+    finder = finders.new_table({
+      results = entries,
+      entry_maker = function(entry)
+        return {
+          value = entry,
+          display = entry.text,
+          ordinal = entry.text,
+          lnum = entry.lnum,
+        }
+      end,
+    }),
+    sorter = conf.generic_sorter({}),
+    attach_mappings = function(prompt_bufnr)
+      actions.select_default:replace(function()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        if selection then
+          vim.schedule(function()
+            vim.api.nvim_set_current_win(winnr)
+            vim.cmd('stopinsert')
+            if vim.bo[bufnr].buftype == 'terminal' then
+              vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-\\><C-n>', true, false, true), 'n', false)
+            end
+            vim.defer_fn(function()
+              vim.api.nvim_win_set_cursor(winnr, { selection.lnum, 0 })
+            end, 50)
+          end)
+        end
+      end)
+      return true
+    end,
+  }):find()
+end)
+
+-- Sorting the quickfix list by buffer and line number
+vim.api.nvim_create_user_command('QfSortByLine', function()
+  local items = vim.fn.getqflist()
+  table.sort(items, function(a, b)
+    if a.bufnr == b.bufnr then
+      return a.lnum < b.lnum
+    end
+    return a.bufnr < b.bufnr
+  end)
+  vim.fn.setqflist(items)
+end, {})
 
 -- Gemini CLI
 keymap.set("n", "<leader>ad", function()
