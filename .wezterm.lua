@@ -34,5 +34,9 @@ config.max_fps = 120
 --config.color_scheme = 'Adventure Time (Gogh)'
 --config.color_scheme = '3024 (dark) (terminal.sexy)'
 
+config.use_fancy_tab_bar = false
+config.show_tabs_in_tab_bar = false
+config.show_new_tab_button_in_tab_bar = false
+
 -- and finally, return the configuration to wezterm
 return config
