@@ -7,30 +7,9 @@ return {
     -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     'nvim-treesitter/nvim-treesitter-textobjects',
   },
-  branch = 'master',
+  branch = 'main',
   build = ':TSUpdate',
   opts = {
-    highlight = {
-      enable = true,
-    },
-    indent = { enable = true },
-    auto_install = true, -- automatically install syntax support when entering new file type buffer
-    ensure_installed = {
-      'lua',
-      'hcl',
-      'terraform',
-      'markdown',
-      'markdown_inline',
-      'luadoc',
-      'c',
-      'query',
-      'html',
-      'css',
-      'tsx',
-      'diff',
-      'erlang',
-      'yaml',
-    },
     textobjects = {
       select = {
         enable = true,
@@ -47,6 +26,39 @@ return {
       },
     },
   },
+  init = function()
+    vim.api.nvim_create_autocmd('FileType', {
+      callback = function()
+        -- Enable treesitter highlighting and disable regex syntax
+        pcall(vim.treesitter.start)
+        -- Enable treesitter-based indentation
+        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      end,
+    })
+    local ensureInstalled = {
+      'lua',
+      'hcl',
+      'terraform',
+      'markdown',
+      'markdown_inline',
+      'luadoc',
+      'c',
+      'query',
+      'html',
+      'css',
+      'tsx',
+      'diff',
+      'erlang',
+      'yaml',
+    }
+    local alreadyInstalled = require('nvim-treesitter.config').get_installed()
+    local parsersToInstall = vim.iter(ensureInstalled)
+        :filter(function(parser)
+          return not vim.tbl_contains(alreadyInstalled, parser)
+        end)
+        :totable()
+    require('nvim-treesitter').install(parsersToInstall)
+  end,
   config = function(_, opts)
     --local configs = require("nvim-treesitter.configs")
     --configs.setup(opts)
