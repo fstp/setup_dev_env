@@ -9,7 +9,7 @@ return {
     opts = {
       -- debug = true, -- Enable debugging
       debug = false, -- Enable debugging
-      model = "claude-opus-4.6",
+      model = "claude-sonnet-4.6",
       -- See Configuration section for rest
       mappings = {
         reset = {
