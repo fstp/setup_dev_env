@@ -209,10 +209,24 @@
         mode: '0755'
 
     # Database manipulation tool
+    - name: Add sq GPG key
+      become: true
+      ansible.builtin.apt_key:
+        url: https://apt.fury.io/neilotoole/gpg.key
+        state: present
+
+    - name: Add sq repository
+      become: true
+      ansible.builtin.apt_repository:
+        repo: "deb https://apt.fury.io/neilotoole/ * *"
+        state: present
+
     - name: Install sq
       become: true
-      ansible.builtin.shell: /bin/sh -c "$(curl -fsSL https://sq.io/install.sh)"
-      changed_when: true
+      ansible.builtin.apt:
+        name: sq
+        state: present
+        update_cache: yes
 
     - name: "[Rust] Install difftastic, syntax aware diff tool"
       ansible.builtin.shell: |
@@ -229,14 +243,28 @@
         scope: global
         value: "difft --display inline"
 
-    # - name: "[Rust] Install htmlq, parse HTML like jq for JSON"
-    #   ansible.builtin.shell: |
-    #     . ~/.bashrc
-    #     cargo install --locked htmlq
-    #     asdf reshim rust
-    #   args:
-    #     executable: /usr/bin/bash
-    #   changed_when: true
+    - name: "[Rust] Install tmux-snaglord, easy copy stuff in tmux"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        cargo install --locked tmux-snaglord
+        asdf reshim rust
+      args:
+        executable: /usr/bin/bash
+      changed_when: true
+
+    - name: "Ensure tmux-snaglord config directory exists"
+      ansible.builtin.file:
+        path: "{{ home }}/.config/tmux-snaglord"
+        state: directory
+        mode: '0755'
+
+    - name: "Softlink tmux-snaglord configuration into home"
+      ansible.builtin.file:
+        src: "{{ playbook_dir }}/tmux-snaglord/config.toml"
+        dest: "{{ home }}/.config/tmux-snaglord/config.toml"
+        state: link
+        access_time: preserve
+        modification_time: preserve
 
     - name: "[Go] Install pup, it can parse HTML and produce JSON"
       ansible.builtin.shell: |
@@ -251,6 +279,15 @@
       ansible.builtin.shell: |
         . ~/.bashrc
         cargo install --locked ast-grep
+        asdf reshim rust
+      args:
+        executable: /usr/bin/bash
+      changed_when: true
+
+    - name: "[Rust] Install tree-sitter-cli, used by neovim"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        cargo install --locked tree-sitter-cli
         asdf reshim rust
       args:
         executable: /usr/bin/bash

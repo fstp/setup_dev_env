@@ -1,0 +1,3 @@
+preset = "bash"
+prompt = "^[^ ]+@[^ ]+ [^ ]+ [\\$#] "
+nerd_fonts = true
