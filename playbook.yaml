@@ -5,6 +5,11 @@
   vars:
     home: "{{ ansible_env.HOME }}"
     bin_dir: "{{ home }}/bin"
+  vars_prompt:
+    - name: install_neovim
+      prompt: "Build and install latest Neovim from source? (yes/no)"
+      default: "yes"
+      private: false
   pre_tasks:
     - name: "Update apt cache if needed"
       become: true
@@ -365,6 +370,7 @@
         dest: "{{ home }}/nvim"
         version: master
         force: true
+      when: install_neovim | bool
 
     - name: "Build Neovim"
       community.general.make:
@@ -372,6 +378,7 @@
         params:
           CMAKE_BUILD_TYPE: RelWithDebInfo
       changed_when: false
+      when: install_neovim | bool
 
     - name: "Install Neovim"
       become: true
@@ -379,6 +386,7 @@
         chdir: "{{ home }}/nvim"
         target: install
       changed_when: false
+      when: install_neovim | bool
 
     - name: "Softlink the Neovim configuration into home"
       ansible.builtin.file:
