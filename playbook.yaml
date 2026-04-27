@@ -51,7 +51,12 @@
         insertbefore: "EOF"
         line: source ~/.bashrc.ansible
 
-    - name: Install ASDF dependencies
+    - name: Determine correct wxWidgets package based on Ubuntu release
+      ansible.builtin.set_fact:
+        # Use 3.2 for Noble (24.04) and newer, fallback to 3.0 for older releases
+        wx_pkg: "{{ 'libwxgtk3.2-dev' if ansible_distribution_release == 'noble' else 'libwxgtk3.0-gtk3-dev' }}"
+
+    - name: Install ASDF (and general system) dependencies
       become: true
       ansible.builtin.apt:
         pkg:
@@ -68,7 +73,9 @@
           - net-tools
           - git
           - curl
-          - libwxgtk3.2-dev
+          - "{{ wx_pkg }}"
+          - clang
+          - libclang-dev
 
     - name: "Download ASDF release"
       ansible.builtin.get_url:
@@ -161,22 +168,16 @@
         creates: "{{ home }}/.asdf/shims/rustc"
 
     - name: "[Rust] Install Zoxide for easy searching"
-      ansible.builtin.shell: |
-        . ~/.bashrc
-        cargo install --locked zoxide
-        asdf reshim rust
-      args:
-        executable: /usr/bin/bash
-      changed_when: true
+      community.general.cargo:
+        name: zoxide
+        state: present
+        locked: true
 
     - name: "[Rust] Install fd as a find replacement"
-      ansible.builtin.shell: |
-        . ~/.bashrc
-        cargo install --locked fd-find
-        asdf reshim rust
-      args:
-        executable: /usr/bin/bash
-      changed_when: true
+      community.general.cargo:
+        name: fd-find
+        state: present
+        locked: true
 
     # JSON manipulation tool
     - name: Install jq
@@ -231,16 +232,13 @@
       ansible.builtin.apt:
         name: sq
         state: present
-        update_cache: yes
+        update_cache: true
 
     - name: "[Rust] Install difftastic, syntax aware diff tool"
-      ansible.builtin.shell: |
-        . ~/.bashrc
-        cargo install --locked difftastic
-        asdf reshim rust
-      args:
-        executable: /usr/bin/bash
-      changed_when: true
+      community.general.cargo:
+        name: difftastic
+        state: present
+        locked: true
 
     - name: "Set difftastic as the default diff tool"
       community.general.git_config:
@@ -249,13 +247,10 @@
         value: "difft --display inline"
 
     - name: "[Rust] Install tmux-snaglord, easy copy stuff in tmux"
-      ansible.builtin.shell: |
-        . ~/.bashrc
-        cargo install --locked tmux-snaglord
-        asdf reshim rust
-      args:
-        executable: /usr/bin/bash
-      changed_when: true
+      community.general.cargo:
+        name: tree-sitter-cli
+        state: present
+        locked: true
 
     - name: "Ensure tmux-snaglord config directory exists"
       ansible.builtin.file:
@@ -271,32 +266,36 @@
         access_time: preserve
         modification_time: preserve
 
+    - name: "Install latest Go using ASDF"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        asdf plugin add golang
+        asdf install golang latest
+        asdf set --home golang latest
+      args:
+        executable: /usr/bin/bash
+        creates: "{{ home }}/.asdf/shims/go"
+
     - name: "[Go] Install pup, it can parse HTML and produce JSON"
       ansible.builtin.shell: |
         . ~/.bashrc
         go install github.com/ericchiang/pup@latest
-        asdf reshim
+        asdf reshim golang
       args:
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/pup"
 
     - name: "[Rust] Install ast-grep, grep on syntax pattern (using tree-sitter)"
-      ansible.builtin.shell: |
-        . ~/.bashrc
-        cargo install --locked ast-grep
-        asdf reshim rust
-      args:
-        executable: /usr/bin/bash
-      changed_when: true
+      community.general.cargo:
+        name: ast-grep
+        state: present
+        locked: true
 
-    - name: "[Rust] Install tree-sitter-cli, used by neovim"
-      ansible.builtin.shell: |
-        . ~/.bashrc
-        cargo install --locked tree-sitter-cli
-        asdf reshim rust
-      args:
-        executable: /usr/bin/bash
-      changed_when: true
+    - name: "[Rust] Install tree-sitter-cli, used by Neovim"
+      community.general.cargo:
+        name: tree-sitter-cli
+        state: present
+        locked: true
 
     - name: "Install dependencies for jless"
       become: true
@@ -307,13 +306,10 @@
           - libxcb-xfixes0-dev
 
     - name: "[Rust] Install jless, a special kind of less for JSON"
-      ansible.builtin.shell: |
-        . ~/.bashrc
-        cargo install --locked jless
-        asdf reshim rust
-      args:
-        executable: /usr/bin/bash
-      changed_when: true
+      community.general.cargo:
+        name: jless
+        state: present
+        locked: true
 
     - name: "Install latest NodeJS using ASDF"
       ansible.builtin.shell: |
@@ -324,16 +320,6 @@
       args:
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/node"
-
-    - name: "Install latest Go using ASDF"
-      ansible.builtin.shell: |
-        . ~/.bashrc
-        asdf plugin add golang
-        asdf install golang latest
-        asdf set --home golang latest
-      args:
-        executable: /usr/bin/bash
-        creates: "{{ home }}/.asdf/shims/go"
 
     - name: "Install Just for command files (https://github.com/casey/just)"
       ansible.builtin.shell: |
@@ -396,32 +382,12 @@
         access_time: preserve
         modification_time: preserve
 
-    - name: "Create global pip config directory"
-      ansible.builtin.file:
-        path: "{{ home }}/.config/pip"
-        state: directory
-        mode: "0755"
-
-    - name: "Create global pip config file"
-      ansible.builtin.file:
-        path: "{{ home }}/.config/pip/pip.conf"
-        state: touch
-        access_time: preserve
-        modification_time: preserve
-        mode: "0755"
-
-    - name: "Add some pip configuration to allow installing global packages"
-      ansible.builtin.blockinfile:
-        path: "{{ home }}/.config/pip/pip.conf"
-        block: |
-          [global]
-          break-system-packages = true
-
     - name: "Install neovim pip package (for communicating with Python)"
       ansible.builtin.pip:
         name: neovim
         state: present
-        extra_args: --break-system-packages
+        # Dynamically apply the flag only on 24.04+
+        extra_args: "{{ '--break-system-packages' if ansible_distribution_version is version('24.04', '>=') else '' }}"
 
     - name: "Install ripgrep, fzf and tmux"
       become: true
