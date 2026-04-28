@@ -53,8 +53,16 @@
 
     - name: Determine correct wxWidgets package based on Ubuntu release
       ansible.builtin.set_fact:
-        # Use 3.2 for Noble (24.04) and newer, fallback to 3.0 for older releases
-        wx_pkg: "{{ 'libwxgtk3.2-dev' if ansible_distribution_release == 'noble' else 'libwxgtk3.0-gtk3-dev' }}"
+        wx_pkg: >-
+          {{
+            'libwxgtk3.2-dev'
+            if (
+              (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('24.04', '>='))
+              or
+              (ansible_distribution == 'Linux Mint' and ansible_distribution_version is version('22', '>='))
+            )
+            else 'libwxgtk3.0-gtk3-dev'
+          }}
 
     - name: Install ASDF (and general system) dependencies
       become: true
