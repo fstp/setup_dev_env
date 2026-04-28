@@ -56,6 +56,7 @@ return {
         'svelte',
         'jdtls',
         'zls',
+        'clangd',
       },
       -- Disable automtic setup for lua_ls since we have custom settings
       automatic_enable = {
@@ -114,6 +115,20 @@ return {
       root_markers = {".project", "erlang_ls.config", ".git"},
     })
     vim.lsp.enable("erlang")
+
+    vim.lsp.config("clangd", {
+      cmd = {
+        "clangd",
+        "--background-index",
+        "--suggest-missing-includes",
+        "--clang-tidy",
+        "--header-insertion=iwyu",
+      },
+      -- Optional: but highly recommended to avoid indexing the entire universe
+      filetypes = {"c", "cpp", "objc", "objcpp"},
+      root_markers = {".project", ".git"},
+    })
+    vim.lsp.enable("clangd")
 
     -- lspconfig.elixirls.setup {}
 
