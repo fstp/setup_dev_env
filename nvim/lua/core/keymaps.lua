@@ -119,6 +119,47 @@ vim.keymap.set("v", "L", "<Plug>(nvim-surround-visual)", {
     desc = "Add a surrounding pair around a motion (visual mode)",
 })
 
+
+--
+-- Extended 'gf'  to handle file:// links in floating windows (LSP docs)
+--
+vim.keymap.set('n', 'gf', function()
+  local cword = vim.fn.expand('<cWORD>')
+
+  -- Try to match a file URI with a line number: file:///path/to/file#L102
+  local path, line = cword:match('file://([^#]+)#L(%d+)')
+
+  -- If there is no line number, try matching just the file URI
+  if not path then
+    path = cword:match('file://([^"\'%>%]%)%s]+)')
+  end
+
+  if path then
+    -- Decode URL-encoded spaces
+    path = path:gsub("%%20", " ")
+
+    -- Check if we are currently inside a floating window
+    local winid = vim.api.nvim_get_current_win()
+    local is_float = vim.api.nvim_win_get_config(winid).zindex ~= nil
+
+    if is_float then
+      vim.api.nvim_win_close(winid, true)
+    end
+
+    vim.schedule(function()
+      vim.cmd('vsplit ' .. vim.fn.fnameescape(path))
+      if line then
+        -- pcall prevents errors if the line number somehow exceeds file length
+        pcall(vim.api.nvim_win_set_cursor, 0, { tonumber(line), 0 })
+        vim.cmd('normal! zz')
+      end
+    end)
+  else
+    -- Fallback: Execute Neovim's default 'goto file'
+    vim.cmd('normal! gf')
+  end
+end, { desc = 'Go to file (supports file:// URIs with line numbers)' })
+
 -- General keymaps
 keymap.set("i", "jk", "<ESC>")                 -- exit insert mode with jk
 keymap.set("i", "ii", "<ESC>")                 -- exit insert mode with ii
