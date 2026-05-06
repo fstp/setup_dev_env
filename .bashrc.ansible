@@ -200,7 +200,7 @@ alias tree='tree -A -h -C'
 alias as-tree='tree -A -h -C --fromfile'
 
 function q() {
-  vipe | llm "$@" | bat -l markdown
+  vipe | llm -t caveman "$@" | bat -l markdown
 }
 
 # Shortcuts for virtualenv
