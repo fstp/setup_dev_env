@@ -8,10 +8,17 @@ export PATH="$HOME/bin:$PATH"
 export ASDF_DATA_DIR="$HOME/.asdf"
 export PATH="$ASDF_DATA_DIR/shims:$PATH"
 
+export BAT_PAGER="less -RFX"
+
 # . "$HOME/.asdf/asdf.sh"
 # . "$HOME/.asdf/completions/asdf.bash"
 
-source /usr/share/doc/fzf/examples/key-bindings.bash || true
+if [ -n "$FB_FZF_PATH" ] || FB_FZF_PATH=$(asdf where fzf 2>/dev/null); then
+  source "$FB_FZF_PATH/shell/key-bindings.bash"
+  source "$FB_FZF_PATH/shell/completion.bash"
+fi
+
+# source /usr/share/doc/fzf/examples/key-bindings.bash || true
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=1_000_000
@@ -30,8 +37,9 @@ shopt -s checkwinsize
 # alias pbcopy='xclip -selection clipboard'
 alias pbcopy='clip.exe'
 
-alias batj='bat -l json'
-alias batm='bat -l md'
+alias batj='bat --style=plain -l json'
+alias batm='bat --style=plain -l md'
+alias bat='bat --style=plain'
 
 alias vipedn='vipe >/dev/null'
 
@@ -43,7 +51,7 @@ ctrl-b:preview-page-up,ctrl-f:preview-page-down,\
 ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down,\
 ctrl-o:toggle-preview,\
 ctrl-v:execute(nvim {1})'\
- --preview 'if [ -d "{}" ]; then tree -C "{}"; else bat --style=numbers --color=always --line-range :500 "{}"; fi' \
+ --preview 'if [ -d "{}" ]; then tree -C "{}"; else bat --style=plain --color=always --line-range :500 "{}"; fi' \
  --preview-window 'up,70%,border-bottom' \
  -m \
  --no-sort \
@@ -87,7 +95,7 @@ fzf-rg() {
     --layout=reverse \
     --color=dark \
     --delimiter : \
-    --preview 'bat --paging=always --color=always {1} --highlight-line {2}' \
+    --preview 'bat --style=plain --paging=always --color=always {1} --highlight-line {2}' \
     --preview-window 'up,70%,border-bottom,+{2}+3/3,~3,nohidden' \
     --bind 'ctrl-v:execute(nvim {1} +{2})'
 }
@@ -96,10 +104,10 @@ fzf-gl() {
   git log --oneline --color=always --decorate --date=short --format="%C(bold blue)%h %C(cyan)%an %C(bold green)%ad %C(auto)%d %C(white)%s%C(reset)" --decorate-refs-exclude="refs/tags/*" --no-merges "$@" | \
     fzf -m --ansi --color=dark --no-sort \
     --layout=reverse \
-    --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always | bat --paging=always' \
+    --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always | bat --style=plain --paging=always' \
     --preview-window 'up,70%,border-bottom,nohidden' \
     --header 'CTRL-E to preview output' \
-    --bind 'ctrl-e:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always | bat -p --paging=always)'
+    --bind 'ctrl-e:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always | bat --style=plain -p --paging=always)'
 }
 
 # fzf-awk: Interactively preview an awk script on stdin
@@ -121,7 +129,7 @@ fzf-awk() {
   cat > "$tmpfile"
 
   # 4. Run fzf
-  fzf --bind "ctrl-e:execute(cat \"$tmpfile\" | eval awk {q} 2>&1 | bat --paging=always),\
+  fzf --bind "ctrl-e:execute(cat \"$tmpfile\" | eval awk {q} 2>&1 | bat --style=plain --paging=always),\
 ctrl-y:execute(echo -n {q} | clip.exe),\
 enter:execute(cat \"$tmpfile\" | eval awk {q} 2>&1)+abort" \
       --header 'Press CTRL-Y to copy query into clipboard, CTRL-E to preview output' \
@@ -200,7 +208,10 @@ alias tree='tree -A -h -C'
 alias as-tree='tree -A -h -C --fromfile'
 
 function q() {
-  vipe | llm -t caveman "$@" | bat -l markdown
+  vipe | llm -t caveman "$@" | bat -l markdown --style=plain
+}
+function qc() {
+  vipe | llm -c -t caveman "$@" | bat -l markdown --style=plain
 }
 
 # Shortcuts for virtualenv

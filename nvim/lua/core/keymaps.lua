@@ -261,24 +261,6 @@ keymap.set('n', '<leader>rc', function() vim.cmd('lcd %:p:h') print(vim.fn.getcw
 keymap.set('n', '<leader>rp', '<cmd>ProjectRoot<CR>', { desc = "Set working directory to project root" })
 keymap.set('n', '<leader>ru', function() vim.cmd('lcd ..') print(vim.fn.getcwd()) end, { desc = "Set working directory up one level" })
 
--- Copilot
-keymap.set('v', '<leader>cc', '<cmd>CopilotChatToggle<CR>', { desc = "Toggle Copilot Chat" })
-keymap.set('v', '<leader>ce', '<cmd>CopilotChatExplain<CR>', { desc = "Explain selected code" })
-keymap.set('v', '<leader>cd', '<cmd>CopilotChatDocs<CR>', { desc = "Generate docs for selection" })
-keymap.set('n', '<leader>cc', '<cmd>CopilotChatToggle<CR>', { desc = "Toggle Copilot Chat" })
-
-keymap.set('n', '<leader>cf', function()
-  require("CopilotChat").ask("#diagnostics\n#buffer\nFix the errors and warnings please", {
-    selection = require("CopilotChat.select").buffer,
-  })
-end, { desc = "Fix buffer" })
-
-keymap.set('n', '<leader>cb', function()
-  require("CopilotChat").toggle({
-    sticky = { "#buffer" }
-  })
-end, { desc = "Ask about buffer" })
-
 -- LSP
 keymap.set('n', '<leader>gd', wrapper, { desc = "Go to definition" })
 keymap.set('n', '<leader>gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', { desc = "Go to declaration" })
@@ -323,6 +305,16 @@ keymap.set("n", "<leader>qa", function()
   local col = vim.fn.col(".")
   local text = vim.api.nvim_get_current_line()
   vim.fn.setqflist({ { bufnr = bufnr, lnum = lnum, col = col, text = text } }, "a")
+end)
+
+keymap.set("n", "<leader>qy", function ()
+  local qf = vim.fn.getqflist()
+  local lines = {}
+  for _, it in ipairs(qf) do
+    local file = vim.api.nvim_buf_get_name(it.bufnr)
+    table.insert(lines, string.format("%s:%d:%s", file, it.lnum, it.text))
+  end
+  vim.fn.setreg('+', table.concat(lines, "\n"))
 end)
 
 keymap.set("n", "<leader>qs", function()

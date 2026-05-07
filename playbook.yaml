@@ -411,11 +411,21 @@
         # Dynamically apply the flag only on 24.04+
         extra_args: "{{ '--break-system-packages' if ansible_distribution_version is version('24.04', '>=') else '' }}"
 
-    - name: "Install ripgrep, fzf and tmux"
+    - name: "Install fzf using asdf to get latest version"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        asdf plugin add fzf https://github.com/kompiro/asdf-fzf.git
+        asdf install fzf latest
+        asdf set --home fzf latest
+        asdf reshim fzf
+      args:
+        executable: /usr/bin/bash
+        creates: "{{ home }}/.asdf/shims/fzf"
+
+    - name: "Install ripgrep and tmux"
       become: true
       ansible.builtin.apt:
         pkg:
-          - fzf
           - ripgrep
           - tmux
 
