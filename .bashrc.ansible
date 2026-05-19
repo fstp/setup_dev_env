@@ -96,7 +96,7 @@ fzf-rg() {
     --color=dark \
     --delimiter : \
     --preview 'bat --style=plain --paging=always --color=always {1} --highlight-line {2}' \
-    --preview-window 'up,70%,border-bottom,+{2}+3/3,~3,nohidden' \
+    --preview-window 'up,60%,border-bottom,+{2}+3/3,~3,nohidden' \
     --bind 'ctrl-v:execute(nvim {1} +{2})'
 }
 
@@ -105,7 +105,7 @@ fzf-gl() {
     fzf -m --ansi --color=dark --no-sort \
     --layout=reverse \
     --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always | bat --style=plain --paging=always' \
-    --preview-window 'up,70%,border-bottom,nohidden' \
+    --preview-window 'up,60%,border-bottom,nohidden' \
     --header 'CTRL-E to preview output' \
     --bind 'ctrl-e:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always | bat --style=plain -p --paging=always)'
 }
