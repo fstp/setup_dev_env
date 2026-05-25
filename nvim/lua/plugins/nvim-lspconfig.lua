@@ -116,6 +116,8 @@ return {
     })
     vim.lsp.enable("erlang")
 
+    vim.lsp.enable("elixir")
+
     vim.lsp.config("clangd", {
       cmd = {
         "clangd",
