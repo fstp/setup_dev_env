@@ -51,6 +51,15 @@
         insertbefore: "EOF"
         line: source ~/.bashrc.ansible
 
+    - name: "Create the local bashrc file, not version controlled and custom for this machine"
+      ansible.builtin.copy:
+        dest: "{{ home }}/.bashrc.local"
+        content: |
+          #!/usr/bin/bash
+          # vi:set ft=sh
+        mode: "0644"
+        force: false
+
     - name: Determine correct wxWidgets package based on Ubuntu release
       ansible.builtin.set_fact:
         wx_pkg: >-
