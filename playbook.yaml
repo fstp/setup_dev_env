@@ -279,7 +279,7 @@
 
     - name: "[Rust] Install tmux-snaglord, easy copy stuff in tmux"
       community.general.cargo:
-        name: tree-sitter-cli
+        name: tmux-snaglord
         state: present
         locked: true
 
