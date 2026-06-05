@@ -181,7 +181,10 @@ alias gb='git branch'
 alias tree='tree -A -h -C'
 alias as-tree='tree -A -h -C --fromfile'
 
-alias llm='llm -t caveman'
+function qllm() {
+  llm "$@" -t caveman | bat -l markdown --style=plain
+}
+
 function q() {
   vipe | llm -t caveman "$@" | bat -l markdown --style=plain
 }

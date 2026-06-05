@@ -127,9 +127,9 @@
     - name: "Install llm, ttok and strip-tags, https://simonwillison.net/2023/May/18/cli-tools-for-llms/"
       ansible.builtin.shell: |
         . ~/.bashrc
-        uv tool install llm --force
-        uv tool install ttok --force
-        uv tool install strip-tags --force
+        uv tool install llm
+        uv tool install ttok
+        uv tool install strip-tags
       args:
         executable: /usr/bin/bash
       changed_when: true
