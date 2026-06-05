@@ -124,10 +124,10 @@
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/uv"
 
-    - name: "Install llm, ttok and strip-tags, https://simonwillison.net/2023/May/18/cli-tools-for-llms/"
+    - name: "Install llm (Gemini), ttok and strip-tags, https://simonwillison.net/2023/May/18/cli-tools-for-llms/"
       ansible.builtin.shell: |
         . ~/.bashrc
-        uv tool install llm
+        uv tool install llm --with llm-gemini
         uv tool install ttok
         uv tool install strip-tags
       args:
@@ -142,11 +142,22 @@
 
     - name: "Install llm cli templates"
       ansible.builtin.file:
-        src: "{{ playbook_dir }}/caveman.yaml"
+        src: "{{ playbook_dir }}/llm/caveman.yaml"
         dest: "{{ home }}/.config/io.datasette.llm/templates/caveman.yaml"
         state: link
         access_time: preserve
         modification_time: preserve
+
+    - name: "Install llm cli default models"
+      ansible.builtin.file:
+        src: "{{ playbook_dir }}/llm/{{ item }}"
+        dest: "{{ home }}/.config/io.datasette.llm/{{ item }}"
+        state: link
+        access_time: preserve
+        modification_time: preserve
+      loop:
+        - default_embedding_model.txt
+        - default_model.txt
 
     - name: "Install latest Erlang using ASDF"
       ansible.builtin.shell: |
