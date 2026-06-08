@@ -3,12 +3,12 @@
 - name: "Set up development environment"
   hosts: "*"
   vars:
-    home: "{{ ansible_env.HOME }}"
+    home: '{{ ansible_facts["env"].HOME }}'
     bin_dir: "{{ home }}/bin"
   vars_prompt:
     - name: install_neovim
       prompt: "Build and install latest Neovim from source? (yes/no)"
-      default: "yes"
+      default: "no"
       private: false
   pre_tasks:
     - name: "Update apt cache if needed"
@@ -66,9 +66,9 @@
           {{
             'libwxgtk3.2-dev'
             if (
-              (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('24.04', '>='))
+              (ansible_facts["distribution"] == 'Ubuntu' and ansible_facts["distribution_version"] is version('24.04', '>='))
               or
-              (ansible_distribution == 'Linux Mint' and ansible_distribution_version is version('22', '>='))
+              (ansible_facts["distribution"] == 'Linux Mint' and ansible_facts["distribution_version"] is version('22', '>='))
             )
             else 'libwxgtk3.0-gtk3-dev'
           }}
@@ -429,7 +429,7 @@
         name: neovim
         state: present
         # Dynamically apply the flag only on 24.04+
-        extra_args: "{{ '--break-system-packages' if ansible_distribution_version is version('24.04', '>=') else '' }}"
+        extra_args: '{{ "--break-system-packages" if ansible_facts["distribution_version"] is version("24.04", ">=") else "" }}'
 
     - name: "Install fzf using asdf to get latest version"
       ansible.builtin.shell: |

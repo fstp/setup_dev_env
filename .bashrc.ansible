@@ -31,9 +31,9 @@ shopt -s checkwinsize
 
 alias pbcopy='xclip -sel clip'
 
-alias batj='bat --style=plain -l json'
-alias batm='bat --style=plain -l md'
-alias bat='bat --style=plain'
+alias batj='bat -p -l json'
+alias batm='bat -p -l md'
+alias bat='bat -p'
 
 alias vipedn='vipe >/dev/null'
 
@@ -45,7 +45,7 @@ ctrl-b:preview-page-up,ctrl-f:preview-page-down,\
 ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down,\
 ctrl-o:toggle-preview,\
 ctrl-v:execute(nvim {1})'\
- --preview 'if [ -d "{}" ]; then tree -C "{}"; else bat --style=plain --color=always --line-range :500 "{}"; fi' \
+ --preview 'if [ -d "{}" ]; then tree -C "{}"; else bat -p --color=always --line-range :500 "{}"; fi' \
  --preview-window 'up,70%,border-bottom' \
  -m \
  --no-sort \
@@ -87,7 +87,7 @@ fzf-rg() {
     --layout=reverse \
     --color=dark \
     --delimiter : \
-    --preview 'bat --style=plain --paging=always --color=always {1} --highlight-line {2}' \
+    --preview 'bat -p --paging=always --color=always {1} --highlight-line {2}' \
     --preview-window 'up,60%,border-bottom,+{2}+3/3,~3,nohidden' \
     --bind 'ctrl-v:execute(nvim {1} +{2})'
 }
@@ -97,10 +97,10 @@ fzf-gl() {
   git log --oneline --color=always --decorate --date=short --format="%C(bold blue)%h %C(cyan)%an %C(bold green)%ad %C(auto)%d %C(white)%s%C(reset)" --decorate-refs-exclude="refs/tags/*" --no-merges "$@" | \
     fzf -m --ansi --color=dark --no-sort \
     --layout=reverse \
-    --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always | bat --style=plain --paging=always' \
+    --preview='echo {} | cut -d " " -f 1 | xargs git show --color=always | bat --paging=always' \
     --preview-window 'up,60%,border-bottom,nohidden' \
     --header 'CTRL-E to preview output' \
-    --bind 'ctrl-e:execute(printf "%s\n" {+} | cut -d " " -f 1 | xargs git show --color=always | bat --style=plain -p --paging=always)'
+    --bind 'ctrl-e:execute(git show --color=always {+1} | bat -p)'
 }
 
 # fzf-awk: Interactively preview an awk script on stdin
@@ -114,7 +114,7 @@ fzf-awk() {
   tmpfile=$(mktemp) || { echo "Failed to create temp file" >&2; return 1; }
   trap 'rm -f "$tmpfile"' EXIT INT TERM
   cat > "$tmpfile"
-  fzf --bind "ctrl-e:execute(cat \"$tmpfile\" | eval awk {q} 2>&1 | bat --style=plain --paging=always),\
+  fzf --bind "ctrl-e:execute(cat \"$tmpfile\" | eval awk {q} 2>&1 | bat -p),\
 ctrl-y:execute(echo -n {q} | clip.exe),\
 enter:execute(cat \"$tmpfile\" | eval awk {q} 2>&1)+abort" \
       --header 'Press CTRL-Y to copy query into clipboard, CTRL-E to preview output' \
@@ -182,14 +182,14 @@ alias tree='tree -A -h -C'
 alias as-tree='tree -A -h -C --fromfile'
 
 function qllm() {
-  llm "$@" -t caveman | bat -l markdown --style=plain
+  llm "$@" -t caveman | bat -l markdown -p
 }
 
 function q() {
-  vipe | llm -t caveman "$@" | bat -l markdown --style=plain
+  vipe | llm -t caveman "$@" | bat -l markdown -p
 }
 function qc() {
-  vipe | llm -c -t caveman "$@" | bat -l markdown --style=plain
+  vipe | llm -c -t caveman "$@" | bat -l markdown -p
 }
 
 # Shortcuts for virtualenv
