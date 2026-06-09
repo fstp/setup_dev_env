@@ -178,8 +178,7 @@ alias gf='git fetch'
 alias gca='git commit -C HEAD --amend'
 alias gb='git branch'
 
-alias tree='tree -A -h -C'
-alias as-tree='tree -A -h -C --fromfile'
+alias ascii-tree='tree -n --charset=ascii --noreport'
 
 function qllm() {
   llm "$@" -t caveman | bat -l markdown -p
