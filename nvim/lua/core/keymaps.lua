@@ -355,3 +355,6 @@ keymap.set("n", "<leader>du", "<cmd>lua require'dap'.run_to_cursor()<cr>")
 keymap.set("n", "<leader>dz", "<cmd>lua require'dapui'.toggle({reset = true})<cr>")
 
 vim.cmd("ca naw noa w")
+
+keymap.set("n", "<leader>bn", ":bnext<CR>", { desc = "Next buffer" })
+keymap.set("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous buffer" })
