@@ -358,3 +358,9 @@ vim.cmd("ca naw noa w")
 
 keymap.set("n", "<leader>bn", ":bnext<CR>", { desc = "Next buffer" })
 keymap.set("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous buffer" })
+
+keymap.set('n', '<leader>th', function()
+  -- Toggle the inlay hint state for the current buffer
+  local is_enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = 0 })
+  vim.lsp.inlay_hint.enable(not is_enabled, { bufnr = 0 })
+end, { desc = "Toggle Inlay Hints" })
