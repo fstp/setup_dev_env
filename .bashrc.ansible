@@ -114,7 +114,7 @@ fzf-awk() {
   tmpfile=$(mktemp) || { echo "Failed to create temp file" >&2; return 1; }
   trap 'rm -f "$tmpfile"' EXIT INT TERM
   cat > "$tmpfile"
-  fzf --bind "ctrl-e:execute(cat \"$tmpfile\" | eval awk {q} 2>&1 | bat -p),\
+  fzf --bind "ctrl-e:execute(cat \"$tmpfile\" | eval awk {q} 2>&1 | bat -p --paging=always),\
 ctrl-y:execute(echo -n {q} | clip.exe),\
 enter:execute(cat \"$tmpfile\" | eval awk {q} 2>&1)+abort" \
       --header 'Press CTRL-Y to copy query into clipboard, CTRL-E to preview output' \
