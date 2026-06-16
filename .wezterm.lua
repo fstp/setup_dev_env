@@ -24,8 +24,11 @@ config.default_domain = 'WSL:Ubuntu'
 --config.font = wezterm.font '3270 Nerd Font Cond'
 --config.font = wezterm.font 'BigBlueTermPlus Nerd Font Mono'
 --config.font = wezterm.font 'Hack Nerd Font Mono'
-config.font = wezterm.font 'Terminess Nerd Font'
+--config.font = wezterm.font 'Terminess Nerd Font'
 --config.font = wezterm.font 'Ubuntu Nerd Font'
+config.font = wezterm.font 'UbuntuMono Nerd Font Mono'
+config.freetype_load_target = "Light"
+config.freetype_render_target = "HorizontalLcd"
 
 config.max_fps = 120
 
@@ -34,9 +37,9 @@ config.max_fps = 120
 --config.color_scheme = 'Adventure Time (Gogh)'
 --config.color_scheme = '3024 (dark) (terminal.sexy)'
 
-config.use_fancy_tab_bar = false
-config.show_tabs_in_tab_bar = false
-config.show_new_tab_button_in_tab_bar = false
+--config.use_fancy_tab_bar = false
+--config.show_tabs_in_tab_bar = false
+--config.show_new_tab_button_in_tab_bar = false
 
 -- and finally, return the configuration to wezterm
 return config
