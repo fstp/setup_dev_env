@@ -92,6 +92,20 @@ fzf-rg() {
     --bind 'ctrl-v:execute(nvim {1} +{2})'
 }
 
+fzf-fd-rg () {
+  # Usage: fzf-fd-rg "file_pattern" "text_pattern"
+  # Example: fzf-fd-rg "*.go" "func main"
+  fd -t f -0 "${1:-.}" | \
+  xargs -0 rg --follow --color=always --line-number --no-heading --smart-case "${2:-}" 2> /dev/null | \
+  fzf --ansi \
+  --layout=reverse \
+  --color=dark \
+  --delimiter : \
+  --preview 'bat -p --color=always {1} --highlight-line {2}' \
+  --preview-window 'up,60%,border-bottom,+{2}+3/3,~3,nohidden' \
+  --bind 'ctrl-v:execute(nvim {1} +{2})'
+}
+
 # fzf-gl: Interactive Git log browser, uses fzf to filter git commits with a live preview of the commit diff.
 fzf-gl() {
   git log --oneline --color=always --decorate --date=short --format="%C(bold blue)%h %C(cyan)%an %C(bold green)%ad %C(auto)%d %C(white)%s%C(reset)" --decorate-refs-exclude="refs/tags/*" --no-merges "$@" | \
