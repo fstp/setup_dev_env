@@ -95,7 +95,7 @@ fzf-rg() {
 fzf-fd-rg () {
   # Usage: fzf-fd-rg "file_pattern" "text_pattern"
   # Example: fzf-fd-rg "*.go" "func main"
-  fd -t f -0 "${1:-.}" | \
+  fd -t f -0 -g "${1:-*}" | \
   xargs -0 rg --follow --color=always --line-number --no-heading --smart-case "${2:-}" 2> /dev/null | \
   fzf --ansi \
   --layout=reverse \
