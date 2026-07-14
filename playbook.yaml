@@ -276,18 +276,6 @@
         state: present
         update_cache: true
 
-    - name: "[Rust] Install difftastic, syntax aware diff tool"
-      community.general.cargo:
-        name: difftastic
-        state: present
-        locked: true
-
-    - name: "Set difftastic as the default diff tool"
-      community.general.git_config:
-        name: diff.external
-        scope: global
-        value: "difft --display inline"
-
     - name: "[Rust] Install tmux-snaglord, easy copy stuff in tmux"
       community.general.cargo:
         name: tmux-snaglord
