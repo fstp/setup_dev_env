@@ -169,6 +169,10 @@ keymap.set("n", "<leader>o", "o<ESC>")         -- newline in normal mode
 
 keymap.set("n", "<localleader>r", ":noh<CR>")
 
+-- Jump to next/previous diff with gj and gk
+keymap.set('n', 'gj', ']c', { noremap = true, desc = 'Next diff' })
+keymap.set('n', 'gk', '[c', { noremap = true, desc = 'Previous diff' })
+
 -- Window movement
 keymap.set("n", "<C-l>", "<C-w>l")
 keymap.set("n", "<C-h>", "<C-w>h")

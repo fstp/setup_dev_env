@@ -68,3 +68,12 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.opt.showcmd = false
+
+-- Improve diff algorithm and enable character-level line matching
+vim.opt.diffopt:append({
+  "algorithm:histogram",
+  "linematch:60"
+})
+
+-- Force exact changed characters to be visible (add after loading your colorscheme)
+vim.api.nvim_set_hl(0, 'DiffText', { bg = '#ff0000', fg = '#ffffff', bold = true })

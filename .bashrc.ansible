@@ -31,8 +31,8 @@ shopt -s checkwinsize
 
 alias pbcopy='xclip -sel clip'
 
-alias batj='bat -p -l json'
-alias batm='bat -p -l md'
+alias batj='bat -l json'
+alias batm='bat -l md'
 alias bat='bat -p'
 
 alias vipedn='vipe >/dev/null'
@@ -195,14 +195,22 @@ alias gb='git branch'
 alias ascii-tree='tree -n --charset=ascii --noreport'
 
 function qllm() {
-  llm "$@" -t caveman | bat -l markdown -p
+  llm --no-stream "$*" -t caveman | bat -l markdown -p
 }
 
 function q() {
-  vipe | llm -t caveman "$@" | bat -l markdown -p
+  vipe | llm --no-stream -t caveman "$@" | bat -l markdown -p
 }
 function qc() {
-  vipe | llm -c -t caveman "$@" | bat -l markdown -p
+  vipe | llm --no-stream -c -t caveman "$@" | bat -l markdown -p
+}
+
+function ais() {
+  llm --no-stream "list 5 bash commands for: $*" -s "output only commands, one per line, no markdown, no backticks"
+}
+function fzf-ai() {
+  cmd=$(ais "$*" | fzf --header 'Press CTRL-Y to copy command into clipboard' --layout=reverse --header-first --ansi --bind "ctrl-y:execute(echo -n {} | xclip -sel clip)")
+  [ -n "$cmd" ] && eval "$cmd"
 }
 
 # Shortcuts for virtualenv
