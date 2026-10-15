@@ -72,7 +72,7 @@ export FZF_CTRL_R_OPTS=" \
 
 export FZF_ALT_C_COMMAND="fd --type d --hidden --no-ignore-vcs --exclude .git --exclude node_modules --exclude target"
 export FZF_ALT_C_OPTS=" \
-  --bind 'ctrl-n:execute-silent(echo -n {+} | clip.exe)+abort' \
+  --bind 'ctrl-n:execute-silent(echo -n {+} | xclip -sel clip)+abort' \
   --preview 'tree -C {}' \
   --color=dark \
   --preview-window=:hidden \
@@ -129,7 +129,7 @@ fzf-awk() {
   trap 'rm -f "$tmpfile"' EXIT INT TERM
   cat > "$tmpfile"
   fzf --bind "ctrl-e:execute(cat \"$tmpfile\" | eval awk {q} 2>&1 | bat -p --paging=always),\
-ctrl-y:execute(echo -n {q} | clip.exe),\
+ctrl-y:execute(echo -n {q} | xclip -sel clip),\
 enter:execute(cat \"$tmpfile\" | eval awk {q} 2>&1)+abort" \
       --header 'Press CTRL-Y to copy query into clipboard, CTRL-E to preview output' \
       --ansi \
@@ -159,7 +159,7 @@ fzf-jq() {
   trap 'rm -f "$tmpfile"' EXIT INT TERM
   cat > "$tmpfile"
   fzf --bind "ctrl-e:execute(cat \"$tmpfile\" | eval jq {q} 2>&1 | jless),\
-ctrl-y:execute(echo -n {q} | clip.exe),\
+ctrl-y:execute(echo -n {q} | xclip -sel clip),\
 enter:execute(cat \"$tmpfile\" | eval jq {q} 2>&1)+abort" \
       --header 'Press CTRL-Y to copy query into clipboard, CTRL-E to preview output' \
       --ansi \
