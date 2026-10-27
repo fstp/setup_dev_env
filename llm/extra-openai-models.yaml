@@ -1,0 +1,34 @@
+# Extra OpenAI-compatible models for the llm CLI.
+# llm reads this from ~/.config/io.datasette.llm/extra-openai-models.yaml
+# (softlinked to this file by playbook.yaml).
+#
+# DeepSeek exposes an OpenAI-compatible endpoint at https://api.deepseek.com.
+# The key is read from `llm keys set deepseek` (stored alias "deepseek").
+#
+#   llm -m deepseek-flash "..."     DeepSeek-V4.1-Flash, 1M context, text+image
+#   llm -m deepseek-v4-pro "..."    DeepSeek-V4-Pro, 1M context, text only
+#
+# NB: `deepseek-chat` still works as a legacy alias and currently resolves to
+# deepseek-flash, but it is no longer listed by GET /models — address the real
+# ids above instead.
+#
+# Reasoning effort: the API default is already "high", so plain calls need no
+# flag. Override per call with:
+#   llm -m deepseek-flash -o reasoning_effort xhigh "..."
+# DeepSeek accepts none|minimal|low|medium|high|xhigh|ultra|max, but llm's own
+# enum stops at xhigh — "ultra"/"max" need a direct API call or a custom plugin.
+
+- model_id: deepseek-flash
+  model_name: deepseek-flash
+  api_base: https://api.deepseek.com
+  api_key_name: deepseek
+  supports_tools: true
+  reasoning: true
+  vision: true
+
+- model_id: deepseek-v4-pro
+  model_name: deepseek-v4-pro
+  api_base: https://api.deepseek.com
+  api_key_name: deepseek
+  supports_tools: true
+  reasoning: true

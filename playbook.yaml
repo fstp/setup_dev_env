@@ -124,10 +124,10 @@
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/uv"
 
-    - name: "Install llm (Gemini), ttok and strip-tags, https://simonwillison.net/2023/May/18/cli-tools-for-llms/"
+    - name: "Install llm (DeepSeek + local embeddings), ttok and strip-tags, https://simonwillison.net/2023/May/18/cli-tools-for-llms/"
       ansible.builtin.shell: |
         . ~/.bashrc
-        uv tool install llm --with llm-gemini
+        uv tool install llm --with llm-sentence-transformers
         uv tool install ttok
         uv tool install strip-tags
       args:
@@ -158,6 +158,14 @@
       loop:
         - default_embedding_model.txt
         - default_model.txt
+
+    - name: "Softlink the extra OpenAI-compatible models (DeepSeek flash/pro) into the llm config"
+      ansible.builtin.file:
+        src: "{{ playbook_dir }}/llm/extra-openai-models.yaml"
+        dest: "{{ home }}/.config/io.datasette.llm/extra-openai-models.yaml"
+        state: link
+        access_time: preserve
+        modification_time: preserve
 
     - name: "Install latest Erlang using ASDF"
       ansible.builtin.shell: |

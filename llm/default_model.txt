@@ -1,1 +1,1 @@
-gemini/gemini-flash-latest
+deepseek-flash

@@ -35,6 +35,6 @@ system: >
   > Caveman resume. Verify backup exist first.
 
   Code/commits/PRs: write normal. "stop caveman" or "normal mode": revert. Level persist until changed or session end.
-model: gemini-3-flash-preview
+model: deepseek-flash
 options:
   temperature: 0.2
