@@ -2,8 +2,7 @@
 --
 -- Agent side: `dsh --profile acp` (Agent Client Protocol over stdio).
 -- Auth: dsh reads DEEPSEEK_API_KEY from ~/.dsh/.env, so no env is set here.
--- Keys sit next to the Gemini CLI ones (<leader>at / <leader>aa in gemini-cli.lua).
--- NOTE: <leader>ad and <leader>ap are taken by Gemini in core/keymaps.lua.
+-- Keys: <leader>ac for chat, <leader>aC for actions.
 
 if vim.fn.executable("dsh") ~= 1 then
   return {}

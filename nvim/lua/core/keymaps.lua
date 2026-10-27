@@ -76,25 +76,6 @@ vim.api.nvim_create_user_command('QfSortByLine', function()
   vim.fn.setqflist(items)
 end, {})
 
--- Gemini CLI
-keymap.set("n", "<leader>ad", function()
-  local api = require("gemini_cli").api
-  api.send_diagnostics_with_prompt()
-end, { desc = "Send diagnostics for current buffer to Gemini" })
-
-keymap.set("n", "<leader>ap", function()
-  local api = require("gemini_cli").api
-  api.open_command_picker(nil, function(picker, item)
-    if item.text == "/custom" then
-      -- Implement custom command handling
-    else
-      -- Default behavior
-      picker:close()
-      api.send_command(item.text)
-    end
-  end)
-end, { desc = "Interactive command selector" })
-
 -- Snacks Terminal
 keymap.set("n", "<C-q>", ":lua require('snacks').terminal(nil, {win = {position = 'bottom', width = 0.6}})<CR>",
   { desc = "Open Snacks Terminal" })
