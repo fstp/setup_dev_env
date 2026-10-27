@@ -1,0 +1,22 @@
+# Patch layer for the dsh-tui profile, installed by playbook.yaml.
+#
+# Bundle layers are listed in package.json under dsh.profile.bundles; this file
+# is applied after all of them, so anything here wins. Two kinds of entry:
+#   - id: <existing row>   → override that row (config / disabled)
+#   - insert: [ ... ]      → append new rows to the tree
+---
+# Load AGENTS.md / CLAUDE.md into every session. dsh-base ships this row
+# disabled, so without this line workspace instructions are never injected.
+- id: agent-instructions
+  disabled: false
+
+# Expose cavemem's memory tools to the model as mcp__cavemem__search,
+# __timeline, __get_observations and __list_sessions.
+- insert:
+    - id: mcp-cavemem
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: cavemem
+        transport: stdio
+        command: cavemem
+        args: ['mcp']

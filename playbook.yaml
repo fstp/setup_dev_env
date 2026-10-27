@@ -351,6 +351,54 @@
         executable: /usr/bin/bash
         creates: "{{ home }}/.asdf/shims/node"
 
+    - name: "Install the DeepSeek harness, its TUI bundle and cavemem"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        npm install -g \
+          @deepseek-ai/dsh@0.2.1-rc.2 \
+          @deepseek-harness-tui/dsh-tui@0.17.0 \
+          cavemem@0.2.1 \
+          @xenova/transformers
+        asdf reshim nodejs
+      args:
+        executable: /usr/bin/bash
+        creates: "{{ home }}/.asdf/shims/dsh"
+
+    - name: "Create the dsh-tui profile"
+      ansible.builtin.shell: |
+        . ~/.bashrc
+        dsh plugin --profile dsh-tui add @deepseek-harness-tui/dsh-tui@0.17.0
+      args:
+        executable: /usr/bin/bash
+        creates: "{{ home }}/.dsh/profiles/dsh-tui/package.json"
+
+    - name: "Enable AGENTS.md loading and the cavemem MCP server in the dsh-tui profile"
+      ansible.builtin.file:
+        src: "{{ playbook_dir }}/dsh/cordis.patch.yml"
+        dest: "{{ home }}/.dsh/profiles/dsh-tui/cordis.patch.yml"
+        state: link
+        force: true
+        access_time: preserve
+        modification_time: preserve
+
+    - name: "Softlink the global AGENTS.md for the harness into the dsh home"
+      ansible.builtin.file:
+        src: "{{ playbook_dir }}/dsh/AGENTS.md"
+        dest: "{{ home }}/.dsh/AGENTS.md"
+        state: link
+        force: true
+        access_time: preserve
+        modification_time: preserve
+
+    - name: "Seed the harness env file for the model API key, keeping any existing one"
+      ansible.builtin.copy:
+        dest: "{{ home }}/.dsh/.env"
+        mode: "0600"
+        force: false
+        content: |
+          # Credentials for the DeepSeek harness (dsh). Fill in your own key.
+          # DEEPSEEK_API_KEY=sk-...
+
     - name: "Install Just for command files (https://github.com/casey/just)"
       ansible.builtin.shell: |
         . ~/.bashrc
