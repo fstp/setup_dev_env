@@ -127,7 +127,13 @@
     - name: "Install llm (DeepSeek + local embeddings), ttok and strip-tags, https://simonwillison.net/2023/May/18/cli-tools-for-llms/"
       ansible.builtin.shell: |
         . ~/.bashrc
-        uv tool install llm --with llm-sentence-transformers
+        # llm-sentence-transformers pulls PyTorch, and the stock PyPI wheel drags in
+        # ~4.5 GB of CUDA libraries. The extra index resolves the +cpu build instead
+        # (1.1 GB). Upgrading an env that already has the CUDA build needs
+        # `uv tool install --reinstall` with these same flags.
+        uv tool install llm --with llm-sentence-transformers \
+          --index https://download.pytorch.org/whl/cpu \
+          --index-strategy unsafe-best-match
         uv tool install ttok
         uv tool install strip-tags
       args:
